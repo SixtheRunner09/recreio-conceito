@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Sacola — Recreio Conceito</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+</head>
+<body>
+
+  <header>
+    <a href="{% url 'index' %}" class="logo" aria-label="Recreio Conceito — página inicial">
+      <svg class="svg-logo" viewBox="0 0 210 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <text x="4" y="47" class="logo-letra">R</text>
+        <line x1="96" y1="9" x2="96" y2="51" class="logo-linha"/>
+        <text x="108" y="47" class="logo-letra">C</text>
+        <text x="99" y="33" class="logo-wordmark" text-anchor="middle">RECREIO CONCEITO</text>
+      </svg>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'produtos' %}">Produtos</a></li>
+        <li><a href="{% url 'produtos' %}#ofertas">Ofertas</a></li>
+        <li><a href="#">Login</a></li>
+      </ul>
+    </nav>
+    <div class="header-acoes">
+      <a href="{% url 'carrinho' %}" class="link-sacola" aria-label="Sacola, 2 itens">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
+          <path d="M9 8V7a3 3 0 0 1 6 0v1"/>
+        </svg>
+        <span class="sacola-contador">2</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="secao-carrinho">
+      <h1>Minha Sacola</h1>
+
+      <!--
+        Estático por enquanto (mockup visual).
+        Quando integrar com o backend do Django, cada item aqui
+        deve virar dados reais vindos do banco, e os botões de
+        remover/finalizar devem virar um <form method="post"> real.
+      -->
+
+      <div class="item-carrinho">
+        <img src="{% static 'app/img/produto-camisa-linho.jpg' %}" alt="Camisa Linho Areia">
+        <div class="item-info">
+          <h3>Camisa Linho Areia</h3>
+          <p class="categoria">Tamanho M · Cor Areia</p>
+          <span class="preco-atual">R$ 139,90</span>
+        </div>
+        <div class="item-quantidade">Qtd: 1</div>
+        <a href="#" class="item-remover">Remover</a>
+      </div>
+
+      <div class="item-carrinho">
+        <img src="{% static 'app/img/produto-vestido.jpg' %}" alt="Vestido Recreio">
+        <div class="item-info">
+          <h3>Vestido Recreio</h3>
+          <p class="categoria">Tamanho P · Cor Preto</p>
+          <span class="preco-atual">R$ 259,90</span>
+        </div>
+        <div class="item-quantidade">Qtd: 1</div>
+        <a href="#" class="item-remover">Remover</a>
+      </div>
+
+      <div class="resumo-carrinho">
+        <div class="linha-resumo">
+          <span>Subtotal</span>
+          <span>R$ 399,80</span>
+        </div>
+        <div class="linha-resumo">
+          <span>Frete</span>
+          <span>Calculado no checkout</span>
+        </div>
+        <div class="linha-total">
+          <span>Total</span>
+          <span>R$ 399,80</span>
+        </div>
+        <a href="#" class="btn-finalizar">Finalizar Compra</a>
+      </div>
+
+      <!--
+        Estado vazio (esconda o bloco acima e mostre este quando
+        a sacola não tiver itens):
+
+        <div class="sacola-vazia">
+          <p>Sua sacola está vazia.</p>
+          <br>
+          <a href="/produtos/" class="btn-contorno">Ver Produtos</a>
+        </div>
+      -->
+
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>Recreio Conceito</h4>
+        <p>Concept store de moda autoral. Peças pensadas pra atravessar estações, não tendências.</p>
+      </div>
+      <div>
+        <h4>Navegue</h4>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'produtos' %}">Produtos</a>
+        <a href="{% url 'carrinho' %}">Sacola</a>
+      </div>
+      <div>
+        <h4>Atendimento</h4>
+        <a href="#">contato@recreioconceito.com</a>
+        <a href="#">Trocas e devoluções</a>
+      </div>
+    </div>
+    <div class="footer-base">
+      <p>&copy; 2026 Recreio Conceito. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
