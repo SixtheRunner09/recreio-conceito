@@ -1,0 +1,816 @@
+/* ============================================
+   RECREIO CONCEITO — sistema de design
+   Preto + creme + dourado, serifa + sans-serif
+   ============================================ */
+
+:root {
+  --preto: #0D0D0D;
+  --creme: #F5F3EE;
+  --creme-escuro: #E9E5DA;
+  --dourado: #C9A24B;
+  --dourado-escuro: #8F6F2E;
+  --cinza: #6B6B6B;
+  --borda: #DEDACD;
+
+  --fonte-titulo: 'Cormorant Garamond', Georgia, serif;
+  --fonte-corpo: 'Jost', 'Segoe UI', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--creme);
+  color: var(--preto);
+  font-family: var(--fonte-corpo);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1, h2, h3 {
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* ============ NAVBAR ============ */
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--preto);
+  padding: 20px 48px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.svg-logo {
+  height: 46px;
+  width: auto;
+  display: block;
+  overflow: visible;
+}
+
+.logo-letra {
+  font-family: var(--fonte-titulo);
+  font-size: 44px;
+  font-weight: 500;
+  fill: var(--creme);
+}
+
+.logo-linha {
+  stroke: var(--creme);
+  stroke-width: 1;
+}
+
+.logo-wordmark {
+  font-family: var(--fonte-corpo);
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  fill: var(--creme);
+}
+
+nav ul {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+
+nav a {
+  color: var(--creme);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding-bottom: 4px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s, color 0.25s;
+}
+
+nav a:hover,
+nav a.ativo {
+  color: var(--dourado);
+  border-bottom-color: var(--dourado);
+}
+
+.header-acoes {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.link-sacola {
+  color: var(--creme);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: 1px solid var(--dourado);
+  padding: 8px 18px;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.link-sacola:hover {
+  background-color: var(--dourado);
+  color: var(--preto);
+}
+
+.menu-toggle {
+  display: none;
+}
+
+/* ============ HERO ============ */
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  min-height: 560px;
+  background-color: var(--preto);
+}
+
+.hero-texto {
+  padding: 48px;
+  color: var(--creme);
+}
+
+.hero-eyebrow {
+  color: var(--dourado);
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.hero-texto h1 {
+  font-size: 56px;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+
+.hero-texto p {
+  color: var(--creme-escuro);
+  max-width: 420px;
+  margin-bottom: 32px;
+}
+
+.btn-dourado {
+  display: inline-block;
+  background-color: var(--dourado);
+  color: var(--preto);
+  padding: 14px 32px;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: background-color 0.25s;
+}
+
+.btn-dourado:hover {
+  background-color: var(--dourado-escuro);
+}
+
+.btn-contorno {
+  display: inline-block;
+  background-color: transparent;
+  color: var(--preto);
+  padding: 13px 31px;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: 1px solid var(--preto);
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.btn-contorno:hover {
+  background-color: var(--preto);
+  color: var(--creme);
+}
+
+.hero-imagem {
+  height: 100%;
+  min-height: 560px;
+  background-color: #1A1A1A;
+  background-size: cover;
+  background-position: center;
+}
+
+/* ============ CARROSSEL (CSS puro, com scroll-snap) ============ */
+
+.secao-carrossel {
+  padding: 80px 0 56px;
+}
+
+.titulo-secao {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.titulo-secao h2 {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.titulo-secao p {
+  color: var(--cinza);
+  font-size: 14px;
+}
+
+.carrossel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  gap: 24px;
+  padding: 0 48px 16px;
+}
+
+.carrossel::-webkit-scrollbar {
+  height: 4px;
+}
+
+.carrossel::-webkit-scrollbar-thumb {
+  background-color: var(--dourado);
+}
+
+.slide {
+  flex: 0 0 85%;
+  max-width: 900px;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  background-color: var(--creme-escuro);
+}
+
+.slide-legenda {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+  color: var(--creme);
+}
+
+.slide-legenda span {
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dourado);
+}
+
+.slide-legenda h3 {
+  font-size: 28px;
+  color: var(--creme);
+}
+
+.pontos-carrossel {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pontos-carrossel a {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--borda);
+  transition: background-color 0.25s;
+}
+
+.pontos-carrossel a:hover {
+  background-color: var(--dourado);
+}
+
+/* ============ GRID DE PRODUTOS / OFERTAS ============ */
+
+.secao-ofertas {
+  background-color: var(--preto);
+  padding: 72px 0;
+}
+
+.secao-ofertas .titulo-secao h2,
+.secao-ofertas .titulo-secao p {
+  color: var(--creme);
+}
+
+.secao-ofertas .titulo-secao p {
+  color: var(--creme-escuro);
+}
+
+.grid-produtos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+  padding: 0 48px;
+}
+
+.card-produto {
+  position: relative;
+}
+
+.card-imagem {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.card-imagem img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  background-color: #2A2A2A;
+  transition: transform 0.4s ease;
+}
+
+.card-produto:hover .card-imagem img {
+  transform: scale(1.04);
+}
+
+.tag-oferta {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background-color: var(--dourado);
+  color: var(--preto);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+}
+
+.card-produto h3 {
+  color: var(--creme);
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.card-produto .categoria {
+  color: var(--cinza);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.precos {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.preco-antigo {
+  text-decoration: line-through;
+  color: var(--cinza);
+  font-size: 14px;
+}
+
+.preco-atual {
+  color: var(--dourado);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.card-produto:not(.em-oferta) .preco-atual {
+  color: var(--creme);
+}
+
+/* ============ PÁGINA DE PRODUTOS (fundo claro) ============ */
+
+.secao-produtos {
+  padding: 64px 0 96px;
+}
+
+.secao-produtos .card-produto h3 {
+  color: var(--preto);
+}
+
+.secao-produtos .preco-atual {
+  color: var(--dourado-escuro);
+}
+
+.secao-produtos .card-imagem img {
+  background-color: var(--creme-escuro);
+}
+
+.filtros {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.filtros a {
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border: 1px solid var(--borda);
+  color: var(--cinza);
+  transition: border-color 0.25s, color 0.25s;
+}
+
+.filtros a:hover,
+.filtros a.ativo {
+  border-color: var(--dourado);
+  color: var(--preto);
+}
+
+/* ============ CARRINHO / SACOLA ============ */
+
+.secao-carrinho {
+  padding: 64px 0 96px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.secao-carrinho h1 {
+  font-size: 40px;
+  margin-bottom: 40px;
+}
+
+.item-carrinho {
+  display: flex;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--borda);
+}
+
+.item-carrinho img {
+  width: 110px;
+  height: 140px;
+  object-fit: cover;
+  background-color: var(--creme-escuro);
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.item-info h3 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.item-info .categoria {
+  color: var(--cinza);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.item-info .preco-atual {
+  color: var(--dourado-escuro);
+}
+
+.item-quantidade {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 14px;
+  color: var(--cinza);
+}
+
+.item-remover {
+  align-self: center;
+  font-size: 13px;
+  color: var(--cinza);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.item-remover:hover {
+  color: var(--preto);
+}
+
+.resumo-carrinho {
+  margin-top: 40px;
+  padding-top: 24px;
+}
+
+.linha-resumo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  color: var(--cinza);
+  font-size: 15px;
+}
+
+.linha-total {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--fonte-titulo);
+  font-size: 24px;
+  margin: 20px 0 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--borda);
+}
+
+.btn-finalizar {
+  display: block;
+  text-align: center;
+  width: 100%;
+  background-color: var(--preto);
+  color: var(--creme);
+  padding: 18px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: background-color 0.25s;
+}
+
+.btn-finalizar:hover {
+  background-color: var(--dourado-escuro);
+}
+
+.sacola-vazia {
+  text-align: center;
+  padding: 64px 0;
+  color: var(--cinza);
+}
+
+/* ============ FOOTER ============ */
+
+footer {
+  background-color: var(--preto);
+  color: var(--creme-escuro);
+  padding: 56px 48px 28px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+}
+
+.footer-grid h4 {
+  color: var(--creme);
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.footer-grid p,
+.footer-grid a {
+  font-size: 14px;
+  color: var(--creme-escuro);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.footer-grid a:hover {
+  color: var(--dourado);
+}
+
+.footer-base {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 24px;
+  border-top: 1px solid #2A2A2A;
+  text-align: center;
+  font-size: 12px;
+  color: var(--cinza);
+}
+
+/* ============ RESPONSIVO ============ */
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-imagem {
+    min-height: 320px;
+    order: -1;
+  }
+
+  .hero-texto h1 {
+    font-size: 38px;
+  }
+
+  nav {
+    display: none;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .container,
+  header,
+  .grid-produtos,
+  .carrossel,
+  footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+/* ===== CARDS DO HERO (cole no final do style.css) ===== */
+
+.hero-cards {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 40px 32px 16px;
+}
+
+.hero-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px 16px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  color: inherit;
+  text-decoration: none;
+  backdrop-filter: blur(6px);
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.hero-card:hover {
+  transform: translateX(-6px);
+  border-color: #d8b95a;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.hero-card-thumb {
+  position: relative;
+  flex: 0 0 96px;
+  height: 112px;
+  border-radius: 2px;
+  background: linear-gradient(135deg, #e6d5b8, #b89a6a);
+}
+
+.hero-card-thumb.thumb-2 { background: linear-gradient(135deg, #3a3d5c, #14162b); }
+.hero-card-thumb.thumb-3 { background: linear-gradient(135deg, #cfcfd6, #8a8c9c); }
+
+.hero-card-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  background: #d8b95a;
+  color: #14162b;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-card-info {
+  flex: 1;
+}
+
+.hero-card-cat {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d8b95a;
+}
+
+.hero-card h3 {
+  margin: 4px 0 8px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.hero-card-preco s {
+  margin-right: 10px;
+  font-size: 14px;
+  opacity: 0.55;
+}
+
+.hero-card-preco strong {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.hero-card-seta {
+  font-size: 22px;
+  color: #d8b95a;
+  transition: transform 0.25s ease;
+}
+
+.hero-card:hover .hero-card-seta {
+  transform: translateX(4px);
+}
+
+@media (max-width: 860px) {
+  .hero-cards { padding: 0 0 24px; }
+  .hero-card-thumb { flex-basis: 80px; height: 96px; }
+}
+/* ===== BOTÃO DA SACOLA (ícone) — cole no final do style.css ===== */
+
+.link-sacola {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 12px;
+  background: transparent;
+  color: #fff;
+  font-size: 0;            /* zera o texto herdado do estilo antigo */
+  letter-spacing: 0;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.link-sacola:hover,
+.link-sacola:focus-visible {
+  border-color: #d8b95a;
+  background: rgba(216, 185, 90, 0.1);
+  color: #d8b95a;
+}
+
+.link-sacola:focus-visible {
+  outline: 2px solid #d8b95a;
+  outline-offset: 2px;
+}
+
+.sacola-contador {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #d8b95a;
+  color: #14162b;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  text-align: center;
+}
+
+
+/* ===== CABEÇALHO DOS CARDS "NOVOS LANÇAMENTOS" ===== */
+
+.hero-cards-cabecalho {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 4px 4px;
+}
+
+.hero-cards-cabecalho span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.hero-cards-cabecalho a {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d8b95a;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.hero-cards-cabecalho a:hover {
+  border-bottom-color: #d8b95a;
+}
