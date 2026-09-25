@@ -22,12 +22,17 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--creme);
   color: var(--preto);
   font-family: var(--fonte-corpo);
   font-size: 16px;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 img {
@@ -96,6 +101,12 @@ header {
   fill: var(--creme);
 }
 
+nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
 nav ul {
   display: flex;
   gap: 40px;
@@ -116,6 +127,15 @@ nav a:hover,
 nav a.ativo {
   color: var(--dourado);
   border-bottom-color: var(--dourado);
+}
+
+/* Entrar / Cadastrar ao lado dos links do menu, aproveitando o espaço da navbar */
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-left: 32px;
+  border-left: 1px solid rgba(245, 243, 238, 0.18);
 }
 
 .header-acoes {
@@ -168,6 +188,86 @@ nav a.ativo {
 
 .menu-toggle {
   display: none;
+}
+
+/* ============ SELETOR DE IDIOMA (CSS puro, via <details>) ============ */
+
+.seletor-idioma {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.seletor-idioma summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.seletor-idioma summary::-webkit-details-marker {
+  display: none;
+}
+
+.idioma-botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--dourado);
+  color: var(--preto);
+  transition: background-color 0.25s;
+}
+
+.idioma-botao:hover {
+  background-color: var(--dourado-escuro);
+}
+
+.seletor-idioma details[open] .idioma-botao {
+  background-color: var(--dourado-escuro);
+}
+
+.idioma-lista {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 170px;
+  background-color: var(--creme);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(13, 13, 13, 0.18);
+  list-style: none;
+  padding: 8px;
+  z-index: 20;
+}
+
+.idioma-lista li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-family: var(--fonte-corpo);
+  font-size: 13px;
+  color: var(--preto);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.idioma-lista li a:hover {
+  background-color: var(--creme-escuro);
+  color: var(--dourado-escuro);
+}
+
+.idioma-bandeira {
+  font-size: 16px;
+  line-height: 1;
+}
+
+@media (max-width: 960px) {
+  .idioma-lista {
+    right: auto;
+    left: 0;
+  }
 }
 
 /* ============ HERO ============ */
@@ -759,10 +859,6 @@ footer {
     height: 96px;
   }
 
-  nav {
-    display: none;
-  }
-
   .footer-grid {
     grid-template-columns: 1fr;
   }
@@ -774,5 +870,1337 @@ footer {
   footer {
     padding-left: 24px;
     padding-right: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-texto {
+    padding: 32px 24px;
+  }
+
+  .hero-texto h1 {
+    font-size: 30px;
+  }
+
+  .titulo-secao h2 {
+    font-size: 28px;
+  }
+
+  .slide {
+    flex-basis: 92%;
+  }
+
+  .slide img {
+    height: 320px;
+  }
+
+  .grid-produtos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==================================================
+   PÁGINA DE PRODUTO
+   Cole no FINAL do style.css
+   ================================================== */
+
+/* -------- Migalha de pão -------- */
+
+.migalha {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding-top: 24px;
+  padding-bottom: 8px;
+  font-size: 13px;
+  color: var(--cinza);
+}
+
+.migalha a:hover {
+  color: var(--dourado-escuro);
+}
+
+.migalha-atual {
+  color: var(--preto);
+}
+
+/* -------- Cards de produto viram links -------- */
+
+a.card-produto {
+  display: block;
+}
+
+/* -------- Estrelas (exibição estática) -------- */
+
+.estrelas {
+  display: inline-flex;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.estrelas-preenchidas {
+  color: var(--dourado);
+}
+
+.estrelas-vazias {
+  color: var(--borda);
+}
+
+/* -------- Galeria + informações do produto -------- */
+
+.produto-detalhe {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 56px;
+  padding: 24px 48px 72px;
+}
+
+.galeria-principal {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  border-radius: 4px;
+}
+
+.galeria-principal::-webkit-scrollbar {
+  height: 4px;
+}
+
+.galeria-principal::-webkit-scrollbar-thumb {
+  background-color: var(--dourado);
+}
+
+.galeria-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.galeria-slide img {
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+  background-color: var(--creme-escuro);
+}
+
+.galeria-pontos {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.galeria-pontos a {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--borda);
+  transition: background-color 0.25s;
+}
+
+.galeria-pontos a:hover {
+  background-color: var(--dourado);
+}
+
+.produto-info {
+  padding-top: 8px;
+}
+
+.produto-categoria {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--dourado-escuro);
+  margin-bottom: 8px;
+}
+
+.produto-info h1 {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.produto-rating-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--cinza);
+  margin-bottom: 20px;
+}
+
+.produto-rating-link:hover {
+  color: var(--preto);
+}
+
+.produto-precos {
+  margin-bottom: 20px;
+}
+
+.produto-precos .preco-atual {
+  font-size: 26px;
+  color: var(--dourado-escuro);
+}
+
+.produto-descricao-breve {
+  color: var(--cinza);
+  max-width: 480px;
+  margin-bottom: 32px;
+}
+
+.produto-tamanhos {
+  margin-bottom: 32px;
+}
+
+.produto-tamanhos-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.produto-tamanhos-cabecalho span {
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cinza);
+}
+
+.produto-tamanhos-cabecalho a {
+  color: var(--dourado-escuro);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tamanhos-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tamanho-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tamanho-opcao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  padding: 10px 14px;
+  border: 1px solid var(--borda);
+  font-size: 13px;
+  color: var(--preto);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.tamanho-radio:checked + .tamanho-opcao {
+  border-color: var(--preto);
+  background-color: var(--preto);
+  color: var(--creme);
+}
+
+.tamanho-radio:focus-visible + .tamanho-opcao {
+  outline: 2px solid var(--dourado);
+  outline-offset: 2px;
+}
+
+.produto-acoes {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.produto-acoes .btn-dourado,
+.produto-acoes .btn-contorno {
+  flex: 1;
+  text-align: center;
+}
+
+.produto-beneficios {
+  list-style: none;
+  border-top: 1px solid var(--borda);
+  padding-top: 20px;
+}
+
+.produto-beneficios li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--cinza);
+}
+
+.produto-beneficios li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--dourado-escuro);
+}
+
+/* -------- Sobre o produto -------- */
+
+.produto-sobre {
+  max-width: 720px;
+  padding: 0 48px 72px;
+}
+
+.produto-sobre h2 {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.produto-sobre h3 {
+  font-size: 18px;
+  margin: 24px 0 10px;
+}
+
+.produto-sobre p {
+  color: var(--cinza);
+}
+
+/* -------- Avaliações -------- */
+
+.secao-avaliacoes {
+  background-color: var(--creme-escuro);
+  padding: 64px 48px;
+}
+
+.avaliacoes-resumo {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 48px;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.avaliacoes-nota {
+  text-align: center;
+}
+
+.avaliacoes-nota strong {
+  display: block;
+  font-family: var(--fonte-titulo);
+  font-size: 48px;
+  line-height: 1;
+}
+
+.avaliacoes-nota .estrelas {
+  font-size: 18px;
+  margin: 8px 0;
+}
+
+.avaliacoes-total {
+  display: block;
+  font-size: 12px;
+  color: var(--cinza);
+  white-space: nowrap;
+}
+
+.avaliacoes-barras {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.barra-linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--cinza);
+}
+
+.barra-fundo {
+  flex: 1;
+  height: 6px;
+  background-color: var(--borda);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.barra-preenchida {
+  height: 100%;
+  background-color: var(--dourado);
+}
+
+.barra-porcentagem {
+  width: 32px;
+  text-align: right;
+}
+
+.btn-avaliar {
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Formulário de avaliação (mostra/esconde sem JS, via checkbox) */
+
+.toggle-oculto {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.formulario-avaliacao {
+  display: none;
+  max-width: 560px;
+  margin: 32px auto 0;
+  background-color: var(--creme);
+  padding: 32px;
+  border: 1px solid var(--borda);
+}
+
+.toggle-oculto:checked ~ .formulario-avaliacao {
+  display: block;
+}
+
+.formulario-avaliacao h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.campo-avaliacao {
+  margin-bottom: 20px;
+}
+
+.campo-avaliacao > span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cinza);
+  margin-bottom: 8px;
+}
+
+/* estrelas clicáveis, sem JavaScript (truque com radio + row-reverse) */
+.estrelas-input {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.estrelas-input input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.estrelas-input label {
+  font-size: 28px;
+  line-height: 1;
+  color: var(--borda);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.estrelas-input label:hover,
+.estrelas-input label:hover ~ label,
+.estrelas-input input:checked ~ label {
+  color: var(--dourado);
+}
+
+.campo-texto {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid var(--borda);
+  background-color: var(--creme);
+  font-family: var(--fonte-corpo);
+  font-size: 14px;
+  color: var(--preto);
+  resize: vertical;
+}
+
+.campo-texto:focus {
+  outline: none;
+  border-color: var(--dourado);
+}
+
+.upload-foto {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px dashed var(--cinza);
+  color: var(--cinza);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.upload-foto:hover {
+  border-color: var(--dourado-escuro);
+  color: var(--dourado-escuro);
+}
+
+.upload-foto input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-foto-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.upload-foto-preview img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+/* Lista de avaliações */
+
+.lista-avaliacoes {
+  max-width: 720px;
+  margin: 48px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.avaliacao-card {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--borda);
+}
+
+.avaliacao-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.avaliacao-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--preto);
+  color: var(--creme);
+  font-family: var(--fonte-titulo);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.avaliacao-nome {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.avaliacao-data {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--cinza);
+  white-space: nowrap;
+}
+
+.avaliacao-texto {
+  color: var(--preto);
+  margin-bottom: 12px;
+}
+
+.avaliacao-fotos {
+  display: flex;
+  gap: 8px;
+}
+
+.avaliacao-fotos img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+/* -------- Mais vendidos -------- */
+
+.secao-mais-vendidos {
+  padding: 72px 0 88px;
+}
+
+.secao-mais-vendidos .grid-produtos {
+  margin-top: 40px;
+}
+
+/* -------- Responsivo -------- */
+
+@media (max-width: 860px) {
+  .produto-detalhe {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 16px 24px 56px;
+  }
+
+  .galeria-slide img {
+    height: 420px;
+  }
+
+  .produto-sobre {
+    padding: 0 24px 56px;
+  }
+
+  .secao-avaliacoes {
+    padding: 48px 24px;
+  }
+
+  .avaliacoes-resumo {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .avaliacoes-total {
+    white-space: normal;
+  }
+
+  .produto-acoes {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .produto-info h1 {
+    font-size: 28px;
+  }
+
+  .galeria-slide img {
+    height: 320px;
+  }
+}
+
+/* ==================================================
+   NAVBAR MOBILE (menu de 3 traços)
+   Cole no FINAL do style.css
+   ================================================== */
+
+/* Esconde o checkbox que controla tudo — não usamos JS aqui */
+.toggle-oculto {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Os dois grupos de ícones do header: um pra desktop, outro pra mobile.
+   No desktop só o carrinho aparece (como já era). No mobile, o conteúdo
+   muda conforme o usuário estar logado ou não — ver o {% if %} no HTML. */
+
+.acoes-desktop {
+  display: flex;
+  align-items: center;
+}
+
+.acoes-mobile {
+  display: none;
+  align-items: center;
+  gap: 14px;
+}
+
+.icone-favoritos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--creme);
+  border: 1px solid rgba(245, 243, 238, 0.28);
+  border-radius: 12px;
+  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
+}
+
+.icone-favoritos:hover,
+.icone-favoritos:focus-visible {
+  border-color: var(--dourado);
+  background-color: rgba(201, 162, 75, 0.1);
+  color: var(--dourado);
+}
+
+.link-texto {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--creme);
+  white-space: nowrap;
+}
+
+.link-texto:hover {
+  color: var(--dourado);
+}
+
+.link-texto-destaque {
+  padding: 9px 14px;
+  border: 1px solid var(--dourado);
+  color: var(--dourado);
+}
+
+.link-texto-destaque:hover {
+  background-color: var(--dourado);
+  color: var(--preto);
+}
+
+/* Botão hamburguer (3 traços) */
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  display: block;
+  height: 2px;
+  background-color: var(--creme);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Quando o menu está aberto, os 3 traços viram um X */
+.toggle-oculto:checked ~ .header-acoes .menu-toggle span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.toggle-oculto:checked ~ .header-acoes .menu-toggle span:nth-child(2) {
+  opacity: 0;
+}
+
+.toggle-oculto:checked ~ .header-acoes .menu-toggle span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Painel do menu (off-canvas, desliza da direita) */
+
+.menu-mobile {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  max-width: 82vw;
+  background-color: var(--preto);
+  color: var(--creme);
+  padding: 24px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 101;
+  overflow-y: auto;
+}
+
+.toggle-oculto:checked ~ .menu-mobile {
+  transform: translateX(0);
+}
+
+.menu-mobile-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-mobile-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 20px;
+}
+
+.menu-mobile-fechar {
+  font-size: 26px;
+  line-height: 1;
+  color: var(--creme);
+  cursor: pointer;
+}
+
+.menu-mobile-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu-mobile-nav a {
+  font-size: 18px;
+  font-family: var(--fonte-titulo);
+}
+
+.menu-mobile-nav a:hover {
+  color: var(--dourado);
+}
+
+.menu-mobile-idioma {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid rgba(245, 243, 238, 0.16);
+}
+
+.menu-mobile-idioma-titulo {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cinza);
+}
+
+.menu-mobile-idioma-opcoes {
+  display: flex;
+  gap: 14px;
+}
+
+.menu-mobile-idioma-opcoes a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-family: var(--fonte-corpo);
+  color: var(--creme-escuro);
+  transition: color 0.2s ease;
+}
+
+.menu-mobile-idioma-opcoes a:hover {
+  color: var(--dourado);
+}
+
+.menu-mobile-conta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(245, 243, 238, 0.16);
+}
+
+.menu-mobile-conta a:not(.btn-dourado):not(.btn-contorno-claro) {
+  font-size: 14px;
+  color: var(--creme-escuro);
+}
+
+.menu-mobile-conta a:not(.btn-dourado):not(.btn-contorno-claro):hover {
+  color: var(--dourado);
+}
+
+.menu-mobile-conta .btn-dourado,
+.menu-mobile-conta .btn-contorno-claro {
+  text-align: center;
+  padding: 12px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.btn-contorno-claro {
+  border: 1px solid var(--creme);
+  color: var(--creme);
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.btn-contorno-claro:hover {
+  background-color: var(--creme);
+  color: var(--preto);
+}
+
+/* Fundo escurecido atrás do menu, fecha ao clicar fora */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(13, 13, 13, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.toggle-oculto:checked ~ .menu-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Breakpoint próprio do header: colapsa pro menu hamburguer antes do resto
+   do layout, já que a navbar ficou mais larga com Entrar/Cadastrar */
+
+@media (max-width: 1024px) {
+  nav {
+    display: none;
+  }
+
+  .seletor-idioma {
+    display: none;
+  }
+
+  .svg-logo {
+    height: 36px;
+  }
+
+  .header-acoes {
+    gap: 14px;
+  }
+
+  .acoes-desktop {
+    display: none;
+  }
+
+  .acoes-mobile {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+}
+/* ==================================================
+   PÁGINAS DE AUTENTICAÇÃO (Login / Cadastro)
+   Cole no FINAL do style.css
+   ================================================== */
+
+.auth-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - 88px);
+}
+
+/* -------- Painel editorial (esquerda) -------- */
+
+.auth-editorial {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 56px 48px;
+  background-color: var(--preto);
+  background-image:
+    linear-gradient(180deg, rgba(13,13,13,0.35) 0%, rgba(13,13,13,0.85) 100%),
+    linear-gradient(135deg, var(--dourado-escuro) 0%, var(--preto) 55%);
+  color: var(--creme);
+  overflow: hidden;
+}
+
+.auth-editorial::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 25% 20%, rgba(201,162,75,0.18), transparent 45%),
+                     radial-gradient(circle at 80% 85%, rgba(201,162,75,0.12), transparent 50%);
+  pointer-events: none;
+}
+
+.auth-editorial-topo,
+.auth-editorial-base {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-editorial-eyebrow {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--dourado);
+  margin-bottom: 20px;
+}
+
+.auth-editorial h2 {
+  font-size: 42px;
+  max-width: 380px;
+  margin-bottom: 16px;
+}
+
+.auth-editorial p {
+  color: var(--creme-escuro);
+  max-width: 340px;
+  font-size: 15px;
+}
+
+.auth-editorial-citacao {
+  border-left: 1px solid var(--dourado);
+  padding-left: 20px;
+  max-width: 360px;
+}
+
+.auth-editorial-citacao p {
+  font-family: var(--fonte-titulo);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--creme);
+  margin-bottom: 10px;
+}
+
+.auth-editorial-citacao span {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--dourado);
+}
+
+/* -------- Painel de formulário (direita) -------- */
+
+.auth-form-lado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 48px;
+  background-color: var(--creme);
+}
+
+.auth-form-box {
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-form-box .migalha-form {
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--dourado-escuro);
+  margin-bottom: 16px;
+}
+
+.auth-form-box h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.auth-subtitulo {
+  color: var(--cinza);
+  font-size: 14px;
+  margin-bottom: 36px;
+}
+
+.auth-subtitulo a {
+  color: var(--dourado-escuro);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-subtitulo a:hover {
+  color: var(--preto);
+}
+
+/* -------- Campos de formulário -------- */
+
+.campo-grupo {
+  margin-bottom: 20px;
+}
+
+.campo-grupo-duplo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.campo-label {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--preto);
+  margin-bottom: 8px;
+}
+
+.campo-input-wrap {
+  position: relative;
+}
+
+.campo-input {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--borda);
+  background-color: #FFFFFF;
+  font-family: var(--fonte-corpo);
+  font-size: 14px;
+  color: var(--preto);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-input::placeholder {
+  color: #AFAA9B;
+}
+
+.campo-input:focus {
+  outline: none;
+  border-color: var(--dourado);
+  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.15);
+}
+
+.campo-toggle-senha {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  color: var(--cinza);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.campo-toggle-senha:hover {
+  color: var(--preto);
+}
+
+.campo-toggle-senha svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.campo-erro {
+  display: block;
+  font-size: 12px;
+  color: #B3432B;
+  margin-top: 6px;
+}
+
+.campo-dica {
+  display: block;
+  font-size: 12px;
+  color: var(--cinza);
+  margin-top: 6px;
+}
+
+/* -------- Força da senha -------- */
+
+.forca-senha {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.forca-senha span {
+  flex: 1;
+  height: 3px;
+  background-color: var(--borda);
+  border-radius: 2px;
+}
+
+/* -------- Linha auxiliar (lembrar-me / esqueci senha) -------- */
+
+.auth-linha-aux {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  font-size: 13px;
+}
+
+.check-lembrar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cinza);
+  cursor: pointer;
+}
+
+.check-lembrar input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--borda);
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.check-lembrar input[type="checkbox"]:checked {
+  background-color: var(--dourado);
+  border-color: var(--dourado);
+}
+
+.check-lembrar input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--preto);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.link-esqueci {
+  color: var(--dourado-escuro);
+}
+
+.link-esqueci:hover {
+  color: var(--preto);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* -------- Termos (cadastro) -------- */
+
+.check-termos {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 28px;
+  font-size: 13px;
+  color: var(--cinza);
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.check-termos input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border: 1px solid var(--borda);
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.check-termos input[type="checkbox"]:checked {
+  background-color: var(--dourado);
+  border-color: var(--dourado);
+}
+
+.check-termos input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--preto);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.check-termos a {
+  color: var(--dourado-escuro);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.check-termos a:hover {
+  color: var(--preto);
+}
+
+/* -------- Botão de submit -------- */
+
+.btn-auth-submit {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: var(--preto);
+  color: var(--creme);
+  border: none;
+  padding: 16px;
+  font-family: var(--fonte-corpo);
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.btn-auth-submit:hover {
+  background-color: var(--dourado-escuro);
+}
+
+/* -------- Divisor "ou" -------- */
+
+.auth-divisor {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0;
+  color: var(--cinza);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.auth-divisor::before,
+.auth-divisor::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--borda);
+}
+
+/* -------- Login social -------- */
+
+.auth-social {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid var(--borda);
+  background-color: #FFFFFF;
+  font-family: var(--fonte-corpo);
+  font-size: 13px;
+  color: var(--preto);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-social:hover {
+  border-color: var(--preto);
+  background-color: var(--creme-escuro);
+}
+
+.btn-social svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* -------- Responsivo -------- */
+
+@media (max-width: 960px) {
+  .auth-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-editorial {
+    display: none;
+  }
+
+  .auth-form-lado {
+    padding: 40px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .campo-grupo-duplo {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .auth-linha-aux {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
   }
 }

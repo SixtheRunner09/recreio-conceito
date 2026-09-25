@@ -1,45 +1,9 @@
+{% extends 'app/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recreio Conceito — Moda com Intenção</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
-</head>
-<body>
 
-  <header>
-    <a href="{% url 'index' %}" class="logo" aria-label="Recreio Conceito — página inicial">
-      <svg class="svg-logo" viewBox="0 0 210 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <text x="4" y="47" class="logo-letra">R</text>
-        <line x1="96" y1="9" x2="96" y2="51" class="logo-linha"/>
-        <text x="108" y="47" class="logo-letra">C</text>
-        <text x="99" y="33" class="logo-wordmark" text-anchor="middle">RECREIO CONCEITO</text>
-      </svg>
-    </a>
-    <nav>
-      <ul>
-        <li><a href="{% url 'index' %}" class="ativo">Home</a></li>
-        <li><a href="{% url 'produtos' %}">Produtos</a></li>
-        <li><a href="{% url 'produtos' %}#ofertas">Ofertas</a></li>
-        <li><a href="#">Login</a></li>
-      </ul>
-    </nav>
-    <div class="header-acoes">
-      <a href="{% url 'carrinho' %}" class="link-sacola" aria-label="Sacola, 2 itens">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
-          <path d="M9 8V7a3 3 0 0 1 6 0v1"/>
-        </svg>
-        <span class="sacola-contador">2</span>
-      </a>
-    </div>
-  </header>
+{% block titulo %}Recreio Conceito — Moda com Intenção{% endblock %}
 
-  <main>
+{% block content %}
 
     <!-- HERO -->
     <section class="hero">
@@ -56,7 +20,7 @@
           <a href="{% url 'produtos' %}">Ver todos</a>
         </div>
 
-        <a href="{% url 'produtos' %}" class="hero-card">
+        <a href="{% url 'produto' %}" class="hero-card">
           <div class="hero-card-thumb thumb-1"><span class="hero-card-tag">Novo</span></div>
           <div class="hero-card-info">
             <span class="hero-card-cat">Alfaiataria</span>
@@ -66,7 +30,7 @@
           <span class="hero-card-seta" aria-hidden="true">→</span>
         </a>
 
-        <a href="{% url 'produtos' %}" class="hero-card">
+        <a href="{% url 'produto' %}" class="hero-card">
           <div class="hero-card-thumb thumb-2"><span class="hero-card-tag">Novo</span></div>
           <div class="hero-card-info">
             <span class="hero-card-cat">Alfaiataria</span>
@@ -76,7 +40,7 @@
           <span class="hero-card-seta" aria-hidden="true">→</span>
         </a>
 
-        <a href="{% url 'produtos' %}" class="hero-card">
+        <a href="{% url 'produto' %}" class="hero-card">
           <div class="hero-card-thumb thumb-3"><span class="hero-card-tag">Novo</span></div>
           <div class="hero-card-info">
             <span class="hero-card-cat">Saias</span>
@@ -136,7 +100,7 @@
 
       <div class="grid-produtos">
 
-        <div class="card-produto em-oferta">
+        <a href="{% url 'produto' %}" class="card-produto em-oferta">
           <div class="card-imagem">
             <span class="tag-oferta">-26%</span>
             <img src="{% static 'app/img/produto-camisa-linho.jpg' %}" alt="Camisa Linho Areia">
@@ -147,9 +111,9 @@
             <span class="preco-antigo">R$ 189,90</span>
             <span class="preco-atual">R$ 139,90</span>
           </div>
-        </div>
+        </a>
 
-        <div class="card-produto em-oferta">
+        <a href="{% url 'produto' %}" class="card-produto em-oferta">
           <div class="card-imagem">
             <span class="tag-oferta">-21%</span>
             <img src="{% static 'app/img/produto-vestido.jpg' %}" alt="Vestido Recreio">
@@ -160,9 +124,9 @@
             <span class="preco-antigo">R$ 329,90</span>
             <span class="preco-atual">R$ 259,90</span>
           </div>
-        </div>
+        </a>
 
-        <div class="card-produto em-oferta">
+        <a href="{% url 'produto' %}" class="card-produto em-oferta">
           <div class="card-imagem">
             <span class="tag-oferta">-21%</span>
             <img src="{% static 'app/img/produto-camisa-seda.jpg' %}" alt="Camisa Seda Off-White">
@@ -173,9 +137,9 @@
             <span class="preco-antigo">R$ 279,90</span>
             <span class="preco-atual">R$ 219,90</span>
           </div>
-        </div>
+        </a>
 
-        <div class="card-produto">
+        <a href="{% url 'produto' %}" class="card-produto">
           <div class="card-imagem">
             <img src="{% static 'app/img/produto-blazer.jpg' %}" alt="Blazer Estruturado">
           </div>
@@ -184,35 +148,9 @@
           <div class="precos">
             <span class="preco-atual">R$ 399,90</span>
           </div>
-        </div>
+        </a>
 
       </div>
     </section>
 
-  </main>
-
-  <footer>
-    <div class="footer-grid">
-      <div>
-        <h4>Recreio Conceito</h4>
-        <p>Concept store de moda autoral. Peças pensadas pra atravessar estações, não tendências.</p>
-      </div>
-      <div>
-        <h4>Navegue</h4>
-        <a href="{% url 'index' %}">Home</a>
-        <a href="{% url 'produtos' %}">Produtos</a>
-        <a href="{% url 'carrinho' %}">Sacola</a>
-      </div>
-      <div>
-        <h4>Atendimento</h4>
-        <a href="#">contato@recreioconceito.com</a>
-        <a href="#">Trocas e devoluções</a>
-      </div>
-    </div>
-    <div class="footer-base">
-      <p>&copy; 2026 Recreio Conceito. Todos os direitos reservados.</p>
-    </div>
-  </footer>
-
-</body>
-</html>
+{% endblock %}

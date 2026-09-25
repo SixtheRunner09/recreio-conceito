@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Recreio Conceito — Moda com Intenção{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <header>
+    <input type="checkbox" id="menu-toggle-input" class="toggle-oculto">
+    <a href="{% url 'index' %}" class="logo" aria-label="Recreio Conceito — página inicial">
+      <svg class="svg-logo" viewBox="0 0 210 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <text x="4" y="47" class="logo-letra">R</text>
+        <line x1="96" y1="9" x2="96" y2="51" class="logo-linha"/>
+        <text x="108" y="47" class="logo-letra">C</text>
+        <text x="99" y="33" class="logo-wordmark" text-anchor="middle">RECREIO CONCEITO</text>
+      </svg>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}ativo{% endif %}">Home</a></li>
+        <li><a href="{% url 'produtos' %}" class="{% if request.resolver_match.url_name == 'produtos' %}ativo{% endif %}">Produtos</a></li>
+        <li><a href="{% url 'produtos' %}#ofertas">Ofertas</a></li>
+      </ul>
+      {% if not user.is_authenticated %}
+        <div class="nav-auth">
+          <a href="{% url 'login' %}" class="link-texto">Entrar</a>
+          <a href="{% url 'cadastro' %}" class="link-texto link-texto-destaque">Cadastrar</a>
+        </div>
+      {% endif %}
+    </nav>
+    <div class="header-acoes">
+
+      <div class="seletor-idioma">
+        <details>
+          <summary class="idioma-botao" aria-label="Selecionar idioma">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18"/>
+              <path d="M12 3c2.4 2.5 3.8 5.8 3.8 9s-1.4 6.5-3.8 9c-2.4-2.5-3.8-5.8-3.8-9s1.4-6.5 3.8-9z"/>
+            </svg>
+          </summary>
+          <ul class="idioma-lista">
+            <li><a href="?lang=pt-br"><span class="idioma-bandeira" aria-hidden="true">🇧🇷</span> Português</a></li>
+            <li><a href="?lang=es"><span class="idioma-bandeira" aria-hidden="true">🇪🇸</span> Español</a></li>
+            <li><a href="?lang=en"><span class="idioma-bandeira" aria-hidden="true">🇺🇸</span> English</a></li>
+          </ul>
+        </details>
+      </div>
+
+      <div class="acoes-desktop">
+        {% if user.is_authenticated %}
+          <a href="{% url 'carrinho' %}" class="link-sacola" aria-label="Sacola, 2 itens">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
+              <path d="M9 8V7a3 3 0 0 1 6 0v1"/>
+            </svg>
+            <span class="sacola-contador">2</span>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="acoes-mobile">
+        {% if user.is_authenticated %}
+          <a href="#" class="icone-favoritos" aria-label="Favoritos">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20.5s-7-4.35-9.5-8.8C.8 8.2 2.3 4.9 5.6 4.2c2-.4 3.9.5 5.1 2.1a5.4 5.4 0 0 1 1.3-1.6c1.5-1.3 3.6-1.8 5.4-1c2.6 1.1 3.6 4.2 2.1 7.1c-2.4 4.5-9.5 8.7-9.5 8.7Z"/>
+            </svg>
+          </a>
+          <a href="{% url 'carrinho' %}" class="link-sacola" aria-label="Sacola, 2 itens">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
+              <path d="M9 8V7a3 3 0 0 1 6 0v1"/>
+            </svg>
+            <span class="sacola-contador">2</span>
+          </a>
+        {% else %}
+          <a href="{% url 'login' %}" class="link-texto">Entrar</a>
+          <a href="{% url 'cadastro' %}" class="link-texto link-texto-destaque">Cadastrar</a>
+        {% endif %}
+
+        <label for="menu-toggle-input" class="menu-toggle" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </label>
+      </div>
+
+    </div>
+
+    <label for="menu-toggle-input" class="menu-overlay" aria-hidden="true"></label>
+
+    <div class="menu-mobile">
+      <div class="menu-mobile-topo">
+        <span class="menu-mobile-titulo">Menu</span>
+        <label for="menu-toggle-input" class="menu-mobile-fechar" aria-label="Fechar menu">&times;</label>
+      </div>
+
+      <nav class="menu-mobile-nav">
+        <ul>
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'produtos' %}">Produtos</a></li>
+          <li><a href="{% url 'produtos' %}#ofertas">Ofertas</a></li>
+        </ul>
+      </nav>
+
+      <div class="menu-mobile-idioma">
+        <span class="menu-mobile-idioma-titulo">Idioma</span>
+        <div class="menu-mobile-idioma-opcoes">
+          <a href="?lang=pt-br"><span aria-hidden="true">🇧🇷</span> PT</a>
+          <a href="?lang=es"><span aria-hidden="true">🇪🇸</span> ES</a>
+          <a href="?lang=en"><span aria-hidden="true">🇺🇸</span> EN</a>
+        </div>
+      </div>
+
+      <div class="menu-mobile-conta">
+        {% if user.is_authenticated %}
+          <a href="#">Favoritos</a>
+          <a href="{% url 'carrinho' %}">Minha sacola</a>
+          <a href="#">Minha conta</a>
+          <a href="#">Sair</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn-contorno-claro">Entrar</a>
+          <a href="{% url 'cadastro' %}" class="btn-dourado">Criar conta</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>Recreio Conceito</h4>
+        <p>Concept store de moda autoral. Peças pensadas pra atravessar estações, não tendências.</p>
+      </div>
+      <div>
+        <h4>Navegue</h4>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'produtos' %}">Produtos</a>
+        <a href="{% url 'carrinho' %}">Sacola</a>
+      </div>
+      <div>
+        <h4>Atendimento</h4>
+        <a href="#">contato@recreioconceito.com</a>
+        <a href="#">Trocas e devoluções</a>
+      </div>
+    </div>
+    <div class="footer-base">
+      <p>&copy; 2026 Recreio Conceito. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  {% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

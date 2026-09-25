@@ -1,0 +1,335 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block titulo %}Camisa Linho Areia — Recreio Conceito{% endblock %}
+
+{% block content %}
+
+    <!-- MIGALHA DE PÃO -->
+    <div class="container migalha">
+      <a href="{% url 'index' %}">Home</a>
+      <span>/</span>
+      <a href="{% url 'produtos' %}">Produtos</a>
+      <span>/</span>
+      <span class="migalha-atual">Camisa Linho Areia</span>
+    </div>
+
+    <!-- PRODUTO: GALERIA + INFORMAÇÕES -->
+    <section class="produto-detalhe container">
+
+      <div class="produto-galeria">
+        <div class="galeria-principal" id="galeria">
+          <div class="galeria-slide" id="foto1">
+            <img src="{% static 'app/img/produto-camisa-linho.jpg' %}" alt="Camisa Linho Areia — vista frontal">
+          </div>
+          <div class="galeria-slide" id="foto2">
+            <img src="{% static 'app/img/produto-camisa-linho-2.jpg' %}" alt="Camisa Linho Areia — vista lateral">
+          </div>
+          <div class="galeria-slide" id="foto3">
+            <img src="{% static 'app/img/produto-camisa-linho-3.jpg' %}" alt="Camisa Linho Areia — detalhe do tecido">
+          </div>
+          <div class="galeria-slide" id="foto4">
+            <img src="{% static 'app/img/produto-camisa-linho-4.jpg' %}" alt="Camisa Linho Areia — look completo">
+          </div>
+        </div>
+        <div class="galeria-pontos">
+          <a href="#foto1" aria-label="Ver foto 1"></a>
+          <a href="#foto2" aria-label="Ver foto 2"></a>
+          <a href="#foto3" aria-label="Ver foto 3"></a>
+          <a href="#foto4" aria-label="Ver foto 4"></a>
+        </div>
+      </div>
+
+      <div class="produto-info">
+        <span class="produto-categoria">Camisas</span>
+        <h1>Camisa Linho Areia</h1>
+
+        <a href="#avaliacoes" class="produto-rating-link">
+          <span class="estrelas">
+            <span class="estrelas-preenchidas">★★★★</span><span class="estrelas-vazias">★</span>
+          </span>
+          <span>4,7 · 24 avaliações</span>
+        </a>
+
+        <div class="precos produto-precos">
+          <span class="preco-antigo">R$ 189,90</span>
+          <span class="preco-atual">R$ 139,90</span>
+        </div>
+
+        <p class="produto-descricao-breve">
+          Camisa de linho leve, com caimento solto e acabamento em botões de madrepérola.
+          Peça atemporal, pensada para atravessar estações sem perder o caimento.
+        </p>
+
+        <div class="produto-tamanhos">
+          <div class="produto-tamanhos-cabecalho">
+            <span>Tamanho</span>
+            <a href="#">Guia de medidas</a>
+          </div>
+          <div class="tamanhos-lista">
+            <input type="radio" name="tamanho" id="tam-pp" class="tamanho-radio">
+            <label for="tam-pp" class="tamanho-opcao">PP</label>
+
+            <input type="radio" name="tamanho" id="tam-p" class="tamanho-radio">
+            <label for="tam-p" class="tamanho-opcao">P</label>
+
+            <input type="radio" name="tamanho" id="tam-m" class="tamanho-radio" checked>
+            <label for="tam-m" class="tamanho-opcao">M</label>
+
+            <input type="radio" name="tamanho" id="tam-g" class="tamanho-radio">
+            <label for="tam-g" class="tamanho-opcao">G</label>
+
+            <input type="radio" name="tamanho" id="tam-gg" class="tamanho-radio">
+            <label for="tam-gg" class="tamanho-opcao">GG</label>
+          </div>
+        </div>
+
+        <div class="produto-acoes">
+          <a href="{% url 'carrinho' %}" class="btn-dourado">Adicionar ao carrinho</a>
+          <a href="#" class="btn-contorno">Comprar agora</a>
+        </div>
+
+        <ul class="produto-beneficios">
+          <li>Frete grátis a partir de R$ 299</li>
+          <li>Troca grátis em até 30 dias</li>
+          <li>Compra 100% segura</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SOBRE O PRODUTO -->
+    <section class="produto-sobre container">
+      <h2>Sobre o produto</h2>
+      <p>
+        Confeccionada em linho 100% natural, a Camisa Linho Areia foi desenhada para o dia a dia
+        que pede leveza sem abrir mão da elegância. O caimento solto e o tecido respirável tornam
+        essa peça um coringa entre o casual e o social.
+      </p>
+      <h3>Composição e cuidados</h3>
+      <p>100% linho. Lavar à mão ou em ciclo delicado, na água fria. Não usar alvejante. Secar à sombra.</p>
+    </section>
+
+    <!-- AVALIAÇÕES -->
+    <section class="secao-avaliacoes" id="avaliacoes">
+      <div class="container">
+
+        <div class="avaliacoes-resumo">
+          <div class="avaliacoes-nota">
+            <strong>4,7</strong>
+            <span class="estrelas">
+              <span class="estrelas-preenchidas">★★★★</span><span class="estrelas-vazias">★</span>
+            </span>
+            <span class="avaliacoes-total">com base em 24 avaliações</span>
+          </div>
+
+          <div class="avaliacoes-barras">
+            <div class="barra-linha">
+              <span>5</span>
+              <div class="barra-fundo"><div class="barra-preenchida" style="width: 70%;"></div></div>
+              <span class="barra-porcentagem">70%</span>
+            </div>
+            <div class="barra-linha">
+              <span>4</span>
+              <div class="barra-fundo"><div class="barra-preenchida" style="width: 20%;"></div></div>
+              <span class="barra-porcentagem">20%</span>
+            </div>
+            <div class="barra-linha">
+              <span>3</span>
+              <div class="barra-fundo"><div class="barra-preenchida" style="width: 6%;"></div></div>
+              <span class="barra-porcentagem">6%</span>
+            </div>
+            <div class="barra-linha">
+              <span>2</span>
+              <div class="barra-fundo"><div class="barra-preenchida" style="width: 3%;"></div></div>
+              <span class="barra-porcentagem">3%</span>
+            </div>
+            <div class="barra-linha">
+              <span>1</span>
+              <div class="barra-fundo"><div class="barra-preenchida" style="width: 1%;"></div></div>
+              <span class="barra-porcentagem">1%</span>
+            </div>
+          </div>
+
+          <label for="toggle-avaliacao" class="btn-contorno btn-avaliar">Avaliar este produto</label>
+        </div>
+
+        <input type="checkbox" id="toggle-avaliacao" class="toggle-oculto">
+
+        <!--
+          Formulário estático por enquanto (mockup visual).
+          Quando integrar com o backend, isto vira um <form method="post" enctype="multipart/form-data">
+          real, salvando nota, texto e fotos vinculados ao produto e ao cliente logado.
+        -->
+        <div class="formulario-avaliacao">
+          <h3>Deixe sua avaliação</h3>
+
+          <div class="campo-avaliacao">
+            <span>Sua nota</span>
+            <div class="estrelas-input">
+              <input type="radio" id="nota-5" name="nota" value="5">
+              <label for="nota-5">★</label>
+              <input type="radio" id="nota-4" name="nota" value="4">
+              <label for="nota-4">★</label>
+              <input type="radio" id="nota-3" name="nota" value="3">
+              <label for="nota-3">★</label>
+              <input type="radio" id="nota-2" name="nota" value="2">
+              <label for="nota-2">★</label>
+              <input type="radio" id="nota-1" name="nota" value="1">
+              <label for="nota-1">★</label>
+            </div>
+          </div>
+
+          <input type="text" class="campo-texto" placeholder="Seu nome">
+          <textarea class="campo-texto" rows="4" placeholder="Conte como foi sua experiência com o produto..."></textarea>
+
+          <label class="upload-foto" id="upload-foto-label">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <circle cx="9" cy="10" r="1.5"/>
+              <path d="M21 15l-5-5-9 9"/>
+            </svg>
+            <span>Adicionar fotos</span>
+            <input type="file" accept="image/*" multiple id="upload-foto-input">
+          </label>
+          <div class="upload-foto-preview" id="upload-foto-preview"></div>
+
+          <button type="submit" class="btn-dourado">Enviar avaliação</button>
+        </div>
+
+        <div class="lista-avaliacoes">
+
+          <article class="avaliacao-card">
+            <div class="avaliacao-cabecalho">
+              <span class="avaliacao-avatar">M</span>
+              <div>
+                <p class="avaliacao-nome">Mariana C.</p>
+                <span class="estrelas">
+                  <span class="estrelas-preenchidas">★★★★★</span>
+                </span>
+              </div>
+              <span class="avaliacao-data">há 2 semanas</span>
+            </div>
+            <p class="avaliacao-texto">
+              Tecido leve, caimento perfeito e não amassa tanto quanto eu esperava. Comprei o M e ficou justo do jeito que eu queria.
+            </p>
+            <div class="avaliacao-fotos">
+              <img src="{% static 'app/img/avaliacao-mariana-1.jpg' %}" alt="Foto enviada por Mariana C.">
+              <img src="{% static 'app/img/avaliacao-mariana-2.jpg' %}" alt="Foto enviada por Mariana C.">
+            </div>
+          </article>
+
+          <article class="avaliacao-card">
+            <div class="avaliacao-cabecalho">
+              <span class="avaliacao-avatar">L</span>
+              <div>
+                <p class="avaliacao-nome">Luiza F.</p>
+                <span class="estrelas">
+                  <span class="estrelas-preenchidas">★★★★</span><span class="estrelas-vazias">★</span>
+                </span>
+              </div>
+              <span class="avaliacao-data">há 1 mês</span>
+            </div>
+            <p class="avaliacao-texto">
+              Muito bonita e de ótimo caimento. Só achei o tecido um pouco mais fino do que eu imaginava pelas fotos.
+            </p>
+          </article>
+
+          <article class="avaliacao-card">
+            <div class="avaliacao-cabecalho">
+              <span class="avaliacao-avatar">B</span>
+              <div>
+                <p class="avaliacao-nome">Beatriz R.</p>
+                <span class="estrelas">
+                  <span class="estrelas-preenchidas">★★★★★</span>
+                </span>
+              </div>
+              <span class="avaliacao-data">há 2 meses</span>
+            </div>
+            <p class="avaliacao-texto">
+              Já é a terceira peça que compro da marca e essa camisa virou minha favorita. Recomendo demais.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIS VENDIDOS -->
+    <section class="secao-mais-vendidos">
+      <div class="titulo-secao">
+        <h2>Mais Vendidos</h2>
+        <p>Quem comprou este produto também levou</p>
+      </div>
+
+      <div class="grid-produtos">
+
+        <a href="{% url 'produto' %}" class="card-produto">
+          <div class="card-imagem">
+            <img src="{% static 'app/img/produto-vestido.jpg' %}" alt="Vestido Recreio">
+          </div>
+          <p class="categoria">Vestidos</p>
+          <h3>Vestido Recreio</h3>
+          <div class="precos">
+            <span class="preco-atual">R$ 259,90</span>
+          </div>
+        </a>
+
+        <a href="{% url 'produto' %}" class="card-produto">
+          <div class="card-imagem">
+            <img src="{% static 'app/img/produto-blazer.jpg' %}" alt="Blazer Estruturado">
+          </div>
+          <p class="categoria">Alfaiataria</p>
+          <h3>Blazer Estruturado</h3>
+          <div class="precos">
+            <span class="preco-atual">R$ 399,90</span>
+          </div>
+        </a>
+
+        <a href="{% url 'produto' %}" class="card-produto">
+          <div class="card-imagem">
+            <img src="{% static 'app/img/produto-calca.jpg' %}" alt="Calça Alfaiataria Reta">
+          </div>
+          <p class="categoria">Alfaiataria</p>
+          <h3>Calça Alfaiataria Reta</h3>
+          <div class="precos">
+            <span class="preco-atual">R$ 259,90</span>
+          </div>
+        </a>
+
+        <a href="{% url 'produto' %}" class="card-produto">
+          <div class="card-imagem">
+            <img src="{% static 'app/img/produto-saia.jpg' %}" alt="Saia Midi Plissada">
+          </div>
+          <p class="categoria">Saias</p>
+          <h3>Saia Midi Plissada</h3>
+          <div class="precos">
+            <span class="preco-atual">R$ 219,90</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+  <script>
+    // Pré-visualização das fotos escolhidas no formulário de avaliação.
+    // Só roda no navegador; não envia nada a lugar nenhum (isso é tarefa do back end).
+    (function () {
+      var input = document.getElementById('upload-foto-input');
+      var preview = document.getElementById('upload-foto-preview');
+      if (!input || !preview) return;
+
+      input.addEventListener('change', function () {
+        preview.innerHTML = '';
+        Array.prototype.forEach.call(input.files, function (arquivo) {
+          if (!arquivo.type.startsWith('image/')) return;
+          var img = document.createElement('img');
+          img.src = URL.createObjectURL(arquivo);
+          preview.appendChild(img);
+        });
+      });
+    })();
+  </script>
+{% endblock %}
