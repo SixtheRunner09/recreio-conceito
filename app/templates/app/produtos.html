@@ -12,87 +12,34 @@
       </div>
 
       <div class="filtros">
-        <a href="#" class="ativo">Todos</a>
-        <a href="#">Camisas</a>
-        <a href="#">Vestidos</a>
-        <a href="#">Alfaiataria</a>
-        <a href="#">Saias</a>
+        <a href="{% url 'produtos' %}" class="{% if not categoria_selecionada %}ativo{% endif %}">Todos</a>
+        <a href="?categoria=Camisas" class="{% if categoria_selecionada == 'Camisas' %}ativo{% endif %}">Camisas</a>
+        <a href="?categoria=Vestidos" class="{% if categoria_selecionada == 'Vestidos' %}ativo{% endif %}">Vestidos</a>
+        <a href="?categoria=Alfaiataria" class="{% if categoria_selecionada == 'Alfaiataria' %}ativo{% endif %}">Alfaiataria</a>
+        <a href="?categoria=Saias" class="{% if categoria_selecionada == 'Saias' %}ativo{% endif %}">Saias</a>
       </div>
 
       <div class="grid-produtos" id="ofertas">
-
-        <a href="{% url 'produto' %}" class="card-produto em-oferta">
+        {% for produto in produtos %}
+        <a href="{% url 'produto' produto.pk %}" class="card-produto {% if produto.preco_antigo %}em-oferta{% endif %}">
           <div class="card-imagem">
-            <span class="tag-oferta">-26%</span>
-            <img src="{% static 'app/img/produto-camisa-linho.jpg' %}" alt="Camisa Linho Areia">
+            {% if produto.preco_antigo %}<span class="tag-oferta">-{{ produto.desconto_percentual }}%</span>{% endif %}
+            {% if produto.imagem %}
+              <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+            {% else %}
+              <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ produto.nome }}">
+            {% endif %}
           </div>
-          <p class="categoria">Camisas</p>
-          <h3>Camisa Linho Areia</h3>
+          <p class="categoria">{{ produto.categoria }}</p>
+          <h3>{{ produto.nome }}</h3>
           <div class="precos">
-            <span class="preco-antigo">R$ 189,90</span>
-            <span class="preco-atual">R$ 139,90</span>
+            {% if produto.preco_antigo %}<span class="preco-antigo">R$ {{ produto.preco_antigo }}</span>{% endif %}
+            <span class="preco-atual">R$ {{ produto.preco }}</span>
           </div>
         </a>
-
-        <a href="{% url 'produto' %}" class="card-produto">
-          <div class="card-imagem">
-            <img src="{% static 'app/img/produto-calca.jpg' %}" alt="Calça Alfaiataria Reta">
-          </div>
-          <p class="categoria">Alfaiataria</p>
-          <h3>Calça Alfaiataria Reta</h3>
-          <div class="precos">
-            <span class="preco-atual">R$ 259,90</span>
-          </div>
-        </a>
-
-        <a href="{% url 'produto' %}" class="card-produto em-oferta">
-          <div class="card-imagem">
-            <span class="tag-oferta">-21%</span>
-            <img src="{% static 'app/img/produto-vestido.jpg' %}" alt="Vestido Recreio">
-          </div>
-          <p class="categoria">Vestidos</p>
-          <h3>Vestido Recreio</h3>
-          <div class="precos">
-            <span class="preco-antigo">R$ 329,90</span>
-            <span class="preco-atual">R$ 259,90</span>
-          </div>
-        </a>
-
-        <a href="{% url 'produto' %}" class="card-produto">
-          <div class="card-imagem">
-            <img src="{% static 'app/img/produto-blazer.jpg' %}" alt="Blazer Estruturado">
-          </div>
-          <p class="categoria">Alfaiataria</p>
-          <h3>Blazer Estruturado</h3>
-          <div class="precos">
-            <span class="preco-atual">R$ 399,90</span>
-          </div>
-        </a>
-
-        <a href="{% url 'produto' %}" class="card-produto">
-          <div class="card-imagem">
-            <img src="{% static 'app/img/produto-saia.jpg' %}" alt="Saia Midi Plissada">
-          </div>
-          <p class="categoria">Saias</p>
-          <h3>Saia Midi Plissada</h3>
-          <div class="precos">
-            <span class="preco-atual">R$ 219,90</span>
-          </div>
-        </a>
-
-        <a href="{% url 'produto' %}" class="card-produto em-oferta">
-          <div class="card-imagem">
-            <span class="tag-oferta">-21%</span>
-            <img src="{% static 'app/img/produto-camisa-seda.jpg' %}" alt="Camisa Seda Off-White">
-          </div>
-          <p class="categoria">Camisas</p>
-          <h3>Camisa Seda Off-White</h3>
-          <div class="precos">
-            <span class="preco-antigo">R$ 279,90</span>
-            <span class="preco-atual">R$ 219,90</span>
-          </div>
-        </a>
-
+        {% empty %}
+        <p>Nenhum produto encontrado.</p>
+        {% endfor %}
       </div>
     </section>
 

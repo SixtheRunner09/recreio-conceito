@@ -37,23 +37,6 @@
     </nav>
     <div class="header-acoes">
 
-      <div class="seletor-idioma">
-        <details>
-          <summary class="idioma-botao" aria-label="Selecionar idioma">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"/>
-              <path d="M3 12h18"/>
-              <path d="M12 3c2.4 2.5 3.8 5.8 3.8 9s-1.4 6.5-3.8 9c-2.4-2.5-3.8-5.8-3.8-9s1.4-6.5 3.8-9z"/>
-            </svg>
-          </summary>
-          <ul class="idioma-lista">
-            <li><a href="?lang=pt-br"><span class="idioma-bandeira" aria-hidden="true">🇧🇷</span> Português</a></li>
-            <li><a href="?lang=es"><span class="idioma-bandeira" aria-hidden="true">🇪🇸</span> Español</a></li>
-            <li><a href="?lang=en"><span class="idioma-bandeira" aria-hidden="true">🇺🇸</span> English</a></li>
-          </ul>
-        </details>
-      </div>
-
       <div class="acoes-desktop">
         {% if user.is_authenticated %}
           <a href="{% url 'carrinho' %}" class="link-sacola" aria-label="Sacola, 2 itens">
@@ -107,15 +90,6 @@
           <li><a href="{% url 'produtos' %}#ofertas">Ofertas</a></li>
         </ul>
       </nav>
-
-      <div class="menu-mobile-idioma">
-        <span class="menu-mobile-idioma-titulo">Idioma</span>
-        <div class="menu-mobile-idioma-opcoes">
-          <a href="?lang=pt-br"><span aria-hidden="true">🇧🇷</span> PT</a>
-          <a href="?lang=es"><span aria-hidden="true">🇪🇸</span> ES</a>
-          <a href="?lang=en"><span aria-hidden="true">🇺🇸</span> EN</a>
-        </div>
-      </div>
 
       <div class="menu-mobile-conta">
         {% if user.is_authenticated %}
