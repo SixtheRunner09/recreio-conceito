@@ -5,7 +5,6 @@
 
 {% block content %}
 
-    <!-- HERO -->
     <section class="hero">
       <div class="hero-texto">
         <span class="hero-eyebrow">Coleção 2026</span>
@@ -20,136 +19,82 @@
           <a href="{% url 'produtos' %}">Ver todos</a>
         </div>
 
-        <a href="{% url 'produto' %}" class="hero-card">
-          <div class="hero-card-thumb thumb-1"><span class="hero-card-tag">Novo</span></div>
+        {% for produto in produtos_destaque %}
+        <a href="{% url 'produto' produto.pk %}" class="hero-card">
+          <div class="hero-card-thumb thumb-{{ forloop.counter }}"
+               {% if produto.imagem %}style="background-image:url('{{ produto.imagem.url }}');"{% endif %}>
+            <span class="hero-card-tag">Novo</span>
+          </div>
           <div class="hero-card-info">
-            <span class="hero-card-cat">Alfaiataria</span>
-            <h3>Calça Alfaiataria Reta</h3>
-            <div class="hero-card-preco"><strong>R$ 259,90</strong></div>
+            <span class="hero-card-cat">{{ produto.categoria }}</span>
+            <h3>{{ produto.nome }}</h3>
+            <div class="hero-card-preco"><strong>R$ {{ produto.preco }}</strong></div>
           </div>
           <span class="hero-card-seta" aria-hidden="true">→</span>
         </a>
-
-        <a href="{% url 'produto' %}" class="hero-card">
-          <div class="hero-card-thumb thumb-2"><span class="hero-card-tag">Novo</span></div>
-          <div class="hero-card-info">
-            <span class="hero-card-cat">Alfaiataria</span>
-            <h3>Blazer Estruturado</h3>
-            <div class="hero-card-preco"><strong>R$ 399,90</strong></div>
-          </div>
-          <span class="hero-card-seta" aria-hidden="true">→</span>
-        </a>
-
-        <a href="{% url 'produto' %}" class="hero-card">
-          <div class="hero-card-thumb thumb-3"><span class="hero-card-tag">Novo</span></div>
-          <div class="hero-card-info">
-            <span class="hero-card-cat">Saias</span>
-            <h3>Saia Midi Plissada</h3>
-            <div class="hero-card-preco"><strong>R$ 219,90</strong></div>
-          </div>
-          <span class="hero-card-seta" aria-hidden="true">→</span>
-        </a>
+        {% empty %}
+        <p>Nenhum produto cadastrado ainda.</p>
+        {% endfor %}
 
       </div>
     </section>
 
-    <!-- CARROSSEL DE COLEÇÕES -->
-    <section class="secao-carrossel">
+    <!-- CARROSSEL — mantém igual, não depende de produto -->
+        <section class="secao-carrossel">
       <div class="titulo-secao">
         <h2>Nossas Coleções</h2>
         <p>Arraste ou clique nos pontos abaixo</p>
       </div>
 
       <div class="carrossel" id="carrossel">
-        <div class="slide" id="slide1">
-          <img src="{% static 'app/img/colecao-alfaiataria.jpg' %}" alt="Coleção Alfaiataria">
+        {% for colecao in colecoes %}
+        <div class="slide" id="slide{{ forloop.counter }}">
+          {% if colecao.imagem %}
+            <img src="{{ colecao.imagem.url }}" alt="{{ colecao.nome }}">
+          {% else %}
+            <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ colecao.nome }}">
+          {% endif %}
           <div class="slide-legenda">
             <span>Coleção</span>
-            <h3>Alfaiataria</h3>
+            <h3>{{ colecao.nome }}</h3>
           </div>
         </div>
-        <div class="slide" id="slide2">
-          <img src="{% static 'app/img/colecao-linho.jpg' %}" alt="Coleção Linho">
-          <div class="slide-legenda">
-            <span>Coleção</span>
-            <h3>Linho de Verão</h3>
-          </div>
-        </div>
-        <div class="slide" id="slide3">
-          <img src="{% static 'app/img/colecao-essenciais.jpg' %}" alt="Coleção Essenciais">
-          <div class="slide-legenda">
-            <span>Coleção</span>
-            <h3>Essenciais</h3>
-          </div>
-        </div>
+        {% endfor %}
       </div>
 
       <div class="pontos-carrossel">
-        <a href="#slide1" aria-label="Ir para slide 1"></a>
-        <a href="#slide2" aria-label="Ir para slide 2"></a>
-        <a href="#slide3" aria-label="Ir para slide 3"></a>
+        {% for colecao in colecoes %}
+        <a href="#slide{{ forloop.counter }}" aria-label="Ir para slide {{ forloop.counter }}"></a>
+        {% endfor %}
       </div>
     </section>
-
-    <!-- PRODUTOS EM OFERTA -->
-    <section class="secao-ofertas" id="ofertas">
+        <section class="secao-ofertas" id="ofertas">
       <div class="titulo-secao">
         <h2>Em Oferta</h2>
         <p>Peças selecionadas com condição especial por tempo limitado</p>
       </div>
 
       <div class="grid-produtos">
-
-        <a href="{% url 'produto' %}" class="card-produto em-oferta">
+        {% for produto in ofertas %}
+        <a href="{% url 'produto' produto.pk %}" class="card-produto em-oferta">
           <div class="card-imagem">
-            <span class="tag-oferta">-26%</span>
-            <img src="{% static 'app/img/produto-camisa-linho.jpg' %}" alt="Camisa Linho Areia">
+            <span class="tag-oferta">-{{ produto.desconto_percentual }}%</span>
+            {% if produto.imagem %}
+              <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+            {% else %}
+              <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ produto.nome }}">
+            {% endif %}
           </div>
-          <p class="categoria">Camisas</p>
-          <h3>Camisa Linho Areia</h3>
+          <p class="categoria">{{ produto.categoria }}</p>
+          <h3>{{ produto.nome }}</h3>
           <div class="precos">
-            <span class="preco-antigo">R$ 189,90</span>
-            <span class="preco-atual">R$ 139,90</span>
+            <span class="preco-antigo">R$ {{ produto.preco_antigo }}</span>
+            <span class="preco-atual">R$ {{ produto.preco }}</span>
           </div>
         </a>
-
-        <a href="{% url 'produto' %}" class="card-produto em-oferta">
-          <div class="card-imagem">
-            <span class="tag-oferta">-21%</span>
-            <img src="{% static 'app/img/produto-vestido.jpg' %}" alt="Vestido Recreio">
-          </div>
-          <p class="categoria">Vestidos</p>
-          <h3>Vestido Recreio</h3>
-          <div class="precos">
-            <span class="preco-antigo">R$ 329,90</span>
-            <span class="preco-atual">R$ 259,90</span>
-          </div>
-        </a>
-
-        <a href="{% url 'produto' %}" class="card-produto em-oferta">
-          <div class="card-imagem">
-            <span class="tag-oferta">-21%</span>
-            <img src="{% static 'app/img/produto-camisa-seda.jpg' %}" alt="Camisa Seda Off-White">
-          </div>
-          <p class="categoria">Camisas</p>
-          <h3>Camisa Seda Off-White</h3>
-          <div class="precos">
-            <span class="preco-antigo">R$ 279,90</span>
-            <span class="preco-atual">R$ 219,90</span>
-          </div>
-        </a>
-
-        <a href="{% url 'produto' %}" class="card-produto">
-          <div class="card-imagem">
-            <img src="{% static 'app/img/produto-blazer.jpg' %}" alt="Blazer Estruturado">
-          </div>
-          <p class="categoria">Alfaiataria</p>
-          <h3>Blazer Estruturado</h3>
-          <div class="precos">
-            <span class="preco-atual">R$ 399,90</span>
-          </div>
-        </a>
-
+        {% empty %}
+        <p>Nenhuma oferta no momento.</p>
+        {% endfor %}
       </div>
     </section>
 
