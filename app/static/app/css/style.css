@@ -2204,3 +2204,30 @@ a.card-produto {
     gap: 14px;
   }
 }
+/* ==================================================
+   BOTÃO DE SAIR (LOGOUT MOBILE)
+   ================================================== */
+
+.menu-mobile-conta form {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.menu-mobile-conta .link-sair {
+  background: transparent;
+  border: none;
+  color: var(--creme-escuro);
+  font-family: var(--fonte-corpo);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  line-height: inherit;
+  transition: color 0.2s ease;
+}
+
+.menu-mobile-conta .link-sair:hover {
+  color: var(--dourado);
+}

@@ -96,7 +96,11 @@
           <a href="#">Favoritos</a>
           <a href="{% url 'carrinho' %}">Minha sacola</a>
           <a href="#">Minha conta</a>
-          <a href="#">Sair</a>
+          
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="link-sair">Sair</button>
+          </form>
         {% else %}
           <a href="{% url 'login' %}" class="btn-contorno-claro">Entrar</a>
           <a href="{% url 'cadastro' %}" class="btn-dourado">Criar conta</a>

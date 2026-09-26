@@ -7,7 +7,6 @@
 
     <div class="auth-wrapper">
 
-      <!-- PAINEL EDITORIAL -->
       <section class="auth-editorial" aria-hidden="true">
         <div class="auth-editorial-topo">
           <span class="auth-editorial-eyebrow">Coleção 2026</span>
@@ -22,7 +21,6 @@
         </div>
       </section>
 
-      <!-- FORMULÁRIO DE LOGIN -->
       <section class="auth-form-lado">
         <div class="auth-form-box">
 
@@ -31,33 +29,38 @@
             Ainda não tem conta? <a href="{% url 'cadastro' %}">Cadastre-se gratuitamente</a>
           </p>
 
+          <!-- EXIBIÇÃO DE MENSAGENS DE ERRO/SUCESSO -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="campo-erro" style="margin-bottom: 15px; display: block; background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 4px;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
           <form method="post" action="{% url 'login' %}" novalidate>
             {% csrf_token %}
 
             <div class="campo-grupo">
-              <label for="id_email" class="campo-label">E-mail</label>
+              <label for="id_username" class="campo-label">E-mail</label>
               <div class="campo-input-wrap">
-                <input type="email" id="id_email" name="email" class="campo-input" placeholder="voce@email.com" autocomplete="email" required>
+                <!-- Alterado name="email" para name="username" -->
+                <input type="email" id="id_username" name="username" class="campo-input" placeholder="voce@email.com" autocomplete="email" required>
               </div>
-              {% if form.email.errors %}
-                <span class="campo-erro">{{ form.email.errors.0 }}</span>
-              {% endif %}
             </div>
 
             <div class="campo-grupo">
-              <label for="id_senha" class="campo-label">Senha</label>
+              <label for="id_password" class="campo-label">Senha</label>
               <div class="campo-input-wrap">
-                <input type="password" id="id_senha" name="senha" class="campo-input" placeholder="••••••••" autocomplete="current-password" required>
-                <button type="button" class="campo-toggle-senha" aria-label="Mostrar senha" data-toggle-senha="id_senha">
+                <!-- Alterado name="senha" para name="password" -->
+                <input type="password" id="id_password" name="password" class="campo-input" placeholder="••••••••" autocomplete="current-password" required>
+                <button type="button" class="campo-toggle-senha" aria-label="Mostrar senha" data-toggle-senha="id_password">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/>
                     <circle cx="12" cy="12" r="3"/>
                   </svg>
                 </button>
               </div>
-              {% if form.senha.errors %}
-                <span class="campo-erro">{{ form.senha.errors.0 }}</span>
-              {% endif %}
             </div>
 
             <div class="auth-linha-aux">
@@ -67,10 +70,6 @@
               </label>
               <a href="#" class="link-esqueci">Esqueci minha senha</a>
             </div>
-
-            {% if form.non_field_errors %}
-              <span class="campo-erro" style="display:block; margin-bottom:16px;">{{ form.non_field_errors.0 }}</span>
-            {% endif %}
 
             <button type="submit" class="btn-auth-submit">Entrar</button>
           </form>
@@ -105,7 +104,7 @@
       botao.addEventListener('click', function () {
         var campo = document.getElementById(botao.getAttribute('data-toggle-senha'));
         var visivel = campo.type === 'text';
-        campo.type = visivel ? 'password' : 'text';
+        campo.type = visivel ? 'text' : 'password';
         botao.setAttribute('aria-label', visivel ? 'Mostrar senha' : 'Ocultar senha');
       });
     });

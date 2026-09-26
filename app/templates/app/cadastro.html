@@ -38,20 +38,20 @@
               <div class="campo-grupo">
                 <label for="id_nome" class="campo-label">Nome</label>
                 <div class="campo-input-wrap">
-                  <input type="text" id="id_nome" name="nome" class="campo-input" placeholder="Seu nome" autocomplete="given-name" required>
+                  <input type="text" id="id_nome" name="nome" class="campo-input" value="{{ dados.nome|default:'' }}" placeholder="Seu nome" autocomplete="given-name" required>
                 </div>
-                {% if form.nome.errors %}
-                  <span class="campo-erro">{{ form.nome.errors.0 }}</span>
+                {% if erros.nome %}
+                  <span class="campo-erro">{{ erros.nome }}</span>
                 {% endif %}
               </div>
 
               <div class="campo-grupo">
                 <label for="id_sobrenome" class="campo-label">Sobrenome</label>
                 <div class="campo-input-wrap">
-                  <input type="text" id="id_sobrenome" name="sobrenome" class="campo-input" placeholder="Seu sobrenome" autocomplete="family-name" required>
+                  <input type="text" id="id_sobrenome" name="sobrenome" class="campo-input" value="{{ dados.sobrenome|default:'' }}" placeholder="Seu sobrenome" autocomplete="family-name" required>
                 </div>
-                {% if form.sobrenome.errors %}
-                  <span class="campo-erro">{{ form.sobrenome.errors.0 }}</span>
+                {% if erros.sobrenome %}
+                  <span class="campo-erro">{{ erros.sobrenome }}</span>
                 {% endif %}
               </div>
             </div>
@@ -59,10 +59,10 @@
             <div class="campo-grupo">
               <label for="id_email" class="campo-label">E-mail</label>
               <div class="campo-input-wrap">
-                <input type="email" id="id_email" name="email" class="campo-input" placeholder="voce@email.com" autocomplete="email" required>
+                <input type="email" id="id_email" name="email" class="campo-input" value="{{ dados.email|default:'' }}" placeholder="voce@email.com" autocomplete="email" required>
               </div>
-              {% if form.email.errors %}
-                <span class="campo-erro">{{ form.email.errors.0 }}</span>
+              {% if erros.email %}
+                <span class="campo-erro">{{ erros.email }}</span>
               {% endif %}
             </div>
 
@@ -80,8 +80,8 @@
               <div class="forca-senha" id="forca-senha" aria-hidden="true">
                 <span></span><span></span><span></span><span></span>
               </div>
-              {% if form.senha.errors %}
-                <span class="campo-erro">{{ form.senha.errors.0 }}</span>
+              {% if erros.senha %}
+                <span class="campo-erro">{{ erros.senha }}</span>
               {% else %}
                 <span class="campo-dica">Use letras, números e ao menos um símbolo.</span>
               {% endif %}
@@ -98,8 +98,8 @@
                   </svg>
                 </button>
               </div>
-              {% if form.confirmar_senha.errors %}
-                <span class="campo-erro">{{ form.confirmar_senha.errors.0 }}</span>
+              {% if erros.confirmar_senha %}
+                <span class="campo-erro">{{ erros.confirmar_senha }}</span>
               {% endif %}
             </div>
 
@@ -108,8 +108,8 @@
               <span>Li e concordo com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>.</span>
             </label>
 
-            {% if form.non_field_errors %}
-              <span class="campo-erro" style="display:block; margin-bottom:16px;">{{ form.non_field_errors.0 }}</span>
+            {% if erros.non_field %}
+              <span class="campo-erro" style="display:block; margin-bottom:16px;">{{ erros.non_field }}</span>
             {% endif %}
 
             <button type="submit" class="btn-auth-submit">Criar minha conta</button>
