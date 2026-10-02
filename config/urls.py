@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from app import views
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,6 +13,8 @@ urlpatterns = [
     path('produto/<int:pk>/', views.produto, name='produto'),
     path('login/', views.login, name='login'),
     path('cadastro/', views.cadastro, name='cadastro'),
+    path('sair/', views.sair, name='logout'),
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:
