@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # exigido pelo allauth
+
+    # Login social (Google e Apple)
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.apple',
+
     'app',
 ]
 
@@ -48,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # exigido pelo allauth
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -104,9 +115,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -130,3 +141,51 @@ MAILERS = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# ---------------------------------------------------------------------------
+# Login social (django-allauth)
+# ---------------------------------------------------------------------------
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',            # seu login atual
+    'allauth.account.auth_backends.AuthenticationBackend',  # login social
+]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
+
+# Entrou com Google/Apple e o e-mail já existe no site? Liga à conta existente
+# (só é seguro porque Google e Apple entregam o e-mail já verificado).
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_LOGIN_ON_GET = False  # os botões enviam POST (já está nos templates)
+
+# As credenciais ficam em variáveis de ambiente, nunca no código.
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APPS': [{
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', ''),
+        }],
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    },
+    'apple': {
+        'APPS': [{
+            'client_id': os.environ.get('APPLE_SERVICES_ID', ''),  # Services ID
+            'secret': os.environ.get('APPLE_KEY_ID', ''),          # Key ID da chave .p8
+            'key': os.environ.get('APPLE_TEAM_ID', ''),            # Team ID
+            'settings': {
+                # Conteúdo do arquivo .p8 (-----BEGIN PRIVATE KEY----- ...)
+                'certificate_key': os.environ.get('APPLE_PRIVATE_KEY', '').replace('\\n', '\n'),
+            },
+        }],
+    },
+}
+
+# Para testar a Apple em desenvolvimento (precisa de HTTPS, ex.: ngrok):
+# ALLOWED_HOSTS = ['seu-subdominio.ngrok-free.app']
+# CSRF_TRUSTED_ORIGINS = ['https://seu-subdominio.ngrok-free.app']

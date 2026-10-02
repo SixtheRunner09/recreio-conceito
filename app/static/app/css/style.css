@@ -2205,8 +2205,342 @@ a.card-produto {
   }
 }
 /* ==================================================
-   BOTÃO DE SAIR (LOGOUT MOBILE)
+<<<<<<< HEAD
+   /* ==================================================
+   NOTIFICAÇÕES (toast)
    ================================================== */
+
+.mensagens {
+  position: fixed;
+  top: 100px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(380px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+.alerta {
+  --cor: var(--dourado);
+  position: relative;
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 14px 18px 18px;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid rgba(245, 243, 238, 0.08);
+  background: rgba(13, 13, 13, 0.94);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: var(--creme);
+  font-family: var(--fonte-corpo);
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  box-shadow:
+    inset 3px 0 0 var(--cor),
+    0 18px 40px -12px rgba(0, 0, 0, 0.55);
+  animation: alerta-entrada 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.alerta--success {
+  --cor: #7DB382;
+}
+
+.alerta--error {
+  --cor: #E0735A;
+}
+
+.alerta--warning,
+.alerta--info {
+  --cor: var(--dourado);
+}
+
+.alerta-icone {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: var(--cor);
+  background: color-mix(in srgb, var(--cor) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cor) 38%, transparent);
+}
+
+.alerta-icone svg {
+  width: 18px;
+  height: 18px;
+}
+
+.alerta-texto {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.alerta-fechar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(245, 243, 238, 0.5);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.alerta-fechar:hover,
+.alerta-fechar:focus-visible {
+  background: rgba(245, 243, 238, 0.1);
+  color: var(--creme);
+  outline: none;
+}
+
+.alerta-progresso {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--cor);
+  opacity: 0.75;
+  transform-origin: left;
+  animation: alerta-progresso var(--duracao, 6s) linear forwards;
+}
+
+.alerta:hover .alerta-progresso,
+.alerta:focus-within .alerta-progresso {
+  animation-play-state: paused;
+}
+
+.alerta--saindo {
+  animation: alerta-saida 0.35s ease forwards;
+}
+
+@keyframes alerta-entrada {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes alerta-saida {
+  to {
+    opacity: 0;
+    transform: translateX(24px) scale(0.97);
+  }
+}
+
+@keyframes alerta-progresso {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .mensagens {
+    top: 88px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alerta,
+  .alerta--saindo {
+    animation: none;
+  }
+
+  .alerta-progresso {
+    animation: alerta-progresso var(--duracao, 6s) linear forwards;
+  }
+}
+
+
+/* ==================================================
+   MENU DA CONTA (desktop) + BOTÃO SAIR
+   ================================================== */
+
+.acoes-desktop {
+  gap: 16px;
+}
+
+.conta-menu {
+  position: relative;
+}
+
+.conta-menu summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.conta-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.conta-botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--creme);
+  border: 1px solid rgba(245, 243, 238, 0.28);
+  border-radius: 12px;
+  transition:
+    border-color 0.25s,
+    background-color 0.25s,
+    color 0.25s;
+}
+
+.conta-inicial {
+  font-family: var(--fonte-titulo);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.conta-botao:hover,
+.conta-botao:focus-visible,
+.conta-menu[open] .conta-botao {
+  border-color: var(--dourado);
+  background-color: rgba(201, 162, 75, 0.1);
+  color: var(--dourado);
+}
+
+.conta-botao:focus-visible {
+  outline: 2px solid var(--dourado);
+  outline-offset: 2px;
+}
+
+.conta-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 30;
+  min-width: 248px;
+  padding: 8px;
+  background: var(--preto);
+  border: 1px solid rgba(245, 243, 238, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.55);
+  animation: conta-abrir 0.2s ease both;
+}
+
+.conta-dropdown-topo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 12px 14px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(245, 243, 238, 0.12);
+}
+
+.conta-nome {
+  font-family: var(--fonte-titulo);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--creme);
+}
+
+.conta-email {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--cinza);
+}
+
+.conta-dropdown a,
+.conta-dropdown .btn-sair {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: left;
+  color: var(--creme-escuro);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.conta-dropdown a:hover,
+.conta-dropdown .btn-sair:hover {
+  background-color: rgba(245, 243, 238, 0.08);
+  color: var(--dourado);
+}
+
+.conta-dropdown form {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(245, 243, 238, 0.12);
+}
+
+
+/* ==================================================
+   ÍCONE DE PERFIL
+   ================================================== */
+
+.botao-pessoa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--creme);
+  border: 1px solid rgba(245, 243, 238, 0.28);
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.25s,
+    background-color 0.25s,
+    color 0.25s;
+}
+
+.botao-pessoa:hover,
+.toggle-oculto:checked ~ .header-acoes .botao-pessoa {
+  border-color: var(--dourado);
+  background-color: rgba(201, 162, 75, 0.1);
+  color: var(--dourado);
+}
+
+
+/* ==================================================
+   BOTÃO SAIR
+   ================================================== */
+
+.btn-sair {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn-sair:focus-visible {
+  outline: 1px solid var(--dourado);
+  outline-offset: 4px;
+}
 
 .menu-mobile-conta form {
   margin: 0;
@@ -2214,20 +2548,50 @@ a.card-produto {
   display: flex;
 }
 
-.menu-mobile-conta .link-sair {
-  background: transparent;
-  border: none;
-  color: var(--creme-escuro);
+.menu-mobile-conta .btn-sair {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 10px 20px;
+  background-color: transparent;
+  border: 1px solid var(--dourado);
+  border-radius: 6px;
   font-family: var(--fonte-corpo);
-  font-size: 14px;
-  cursor: pointer;
-  padding: 0;
-  margin: 0;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   text-align: left;
-  line-height: inherit;
-  transition: color 0.2s ease;
+  color: var(--dourado);
+  cursor: pointer;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
 }
 
-.menu-mobile-conta .link-sair:hover {
-  color: var(--dourado);
+.menu-mobile-conta .btn-sair:hover {
+  background-color: var(--dourado);
+  color: var(--preto);
+}
+
+@keyframes conta-abrir {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .botao-pessoa {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .conta-dropdown {
+    animation: none;
+  }
 }
