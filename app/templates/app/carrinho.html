@@ -8,61 +8,54 @@
     <section class="secao-carrinho">
       <h1>Minha Sacola</h1>
 
-      <!--
-        Estático por enquanto (mockup visual).
-        Quando integrar com o backend do Django, cada item aqui
-        deve virar dados reais vindos do banco, e os botões de
-        remover/finalizar devem virar um <form method="post"> real.
-      -->
+      {% for item in itens_carrinho %}
+        <div class="item-carrinho">
+          {% if item.produto.imagem %}
+            <img src="{{ item.produto.imagem.url }}" alt="{{ item.produto.nome }}">
+          {% else %}
+            <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ item.produto.nome }}">
+          {% endif %}
 
-      <div class="item-carrinho">
-        <img src="{% static 'app/img/produto-camisa-linho.jpg' %}" alt="Camisa Linho Areia">
-        <div class="item-info">
-          <h3>Camisa Linho Areia</h3>
-          <p class="categoria">Tamanho M · Cor Areia</p>
-          <span class="preco-atual">R$ 139,90</span>
-        </div>
-        <div class="item-quantidade">Qtd: 1</div>
-        <a href="#" class="item-remover">Remover</a>
-      </div>
+          <div class="item-info">
+            <h3>{{ item.produto.nome }}</h3>
+            <p class="categoria">{{ item.produto.categoria }}</p>
+            <span class="preco-atual">R$ {{ item.produto.preco }}</span>
+          </div>
 
-      <div class="item-carrinho">
-        <img src="{% static 'app/img/produto-vestido.jpg' %}" alt="Vestido Recreio">
-        <div class="item-info">
-          <h3>Vestido Recreio</h3>
-          <p class="categoria">Tamanho P · Cor Preto</p>
-          <span class="preco-atual">R$ 259,90</span>
-        </div>
-        <div class="item-quantidade">Qtd: 1</div>
-        <a href="#" class="item-remover">Remover</a>
-      </div>
+          <div class="item-quantidade">
+            Qtd: {{ item.quantidade }}
+          </div>
 
-      <div class="resumo-carrinho">
-        <div class="linha-resumo">
-          <span>Subtotal</span>
-          <span>R$ 399,80</span>
+          <form action="{% url 'remover_do_carrinho' item.produto.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="item-remover" style="background:none; border:none; cursor:pointer;">Remover</button>
+          </form>
         </div>
-        <div class="linha-resumo">
-          <span>Frete</span>
-          <span>Calculado no checkout</span>
-        </div>
-        <div class="linha-total">
-          <span>Total</span>
-          <span>R$ 399,80</span>
-        </div>
-        <a href="#" class="btn-finalizar">Finalizar Compra</a>
-      </div>
-
-      <!--
-        Estado vazio (esconda o bloco acima e mostre este quando
-        a sacola não tiver itens):
-
+      {% empty %}
         <div class="sacola-vazia">
           <p>Sua sacola está vazia.</p>
           <br>
-          <a href="/produtos/" class="btn-contorno">Ver Produtos</a>
+          <a href="{% url 'produtos' %}" class="btn-contorno">Ver Produtos</a>
         </div>
-      -->
+      {% endfor %}
+
+      {% if itens_carrinho %}
+        <div class="resumo-carrinho">
+          <div class="linha-resumo">
+            <span>Subtotal</span>
+            <span>R$ {{ total }}</span>
+          </div>
+          <div class="linha-resumo">
+            <span>Frete</span>
+            <span>Calculado no checkout</span>
+          </div>
+          <div class="linha-total">
+            <span>Total</span>
+            <span>R$ {{ total }}</span>
+          </div>
+          <a href="#" class="btn-finalizar">Finalizar Compra</a>
+        </div>
+      {% endif %}
 
     </section>
 

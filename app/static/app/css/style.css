@@ -2205,14 +2205,14 @@ a.card-produto {
   }
 }
 /* ==================================================
+<<<<<<< HEAD
+   /* ==================================================
    NOTIFICAÇÕES (toast)
-   Substitui o bloco antigo de .mensagens / .alerta
-   no FINAL do style.css
    ================================================== */
 
 .mensagens {
   position: fixed;
-  top: 100px;              /* header sticky tem ~86px de altura */
+  top: 100px;
   right: 24px;
   z-index: 1000;
   display: flex;
@@ -2247,10 +2247,18 @@ a.card-produto {
   animation: alerta-entrada 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.alerta--success { --cor: #7DB382; }
-.alerta--error   { --cor: #E0735A; }
+.alerta--success {
+  --cor: #7DB382;
+}
+
+.alerta--error {
+  --cor: #E0735A;
+}
+
 .alerta--warning,
-.alerta--info    { --cor: var(--dourado); }
+.alerta--info {
+  --cor: var(--dourado);
+}
 
 .alerta-icone {
   display: grid;
@@ -2318,17 +2326,32 @@ a.card-produto {
 }
 
 @keyframes alerta-entrada {
-  from { opacity: 0; transform: translateX(24px) scale(0.97); }
-  to   { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes alerta-saida {
-  to { opacity: 0; transform: translateX(24px) scale(0.97); }
+  to {
+    opacity: 0;
+    transform: translateX(24px) scale(0.97);
+  }
 }
 
 @keyframes alerta-progresso {
-  from { transform: scaleX(1); }
-  to   { transform: scaleX(0); }
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
 }
 
 @media (max-width: 1024px) {
@@ -2342,20 +2365,36 @@ a.card-produto {
 
 @media (prefers-reduced-motion: reduce) {
   .alerta,
-  .alerta--saindo { animation: none; }
-  .alerta-progresso { animation: alerta-progresso var(--duracao, 6s) linear forwards; }
+  .alerta--saindo {
+    animation: none;
+  }
+
+  .alerta-progresso {
+    animation: alerta-progresso var(--duracao, 6s) linear forwards;
+  }
 }
+
+
 /* ==================================================
-   MENU DA CONTA (desktop) + botão Sair
-   Cole no FINAL do style.css
+   MENU DA CONTA (desktop) + BOTÃO SAIR
    ================================================== */
 
-.acoes-desktop { gap: 16px; }
+.acoes-desktop {
+  gap: 16px;
+}
 
-.conta-menu { position: relative; }
+.conta-menu {
+  position: relative;
+}
 
-.conta-menu summary { list-style: none; cursor: pointer; }
-.conta-menu summary::-webkit-details-marker { display: none; }
+.conta-menu summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.conta-menu summary::-webkit-details-marker {
+  display: none;
+}
 
 .conta-botao {
   display: inline-flex;
@@ -2366,7 +2405,10 @@ a.card-produto {
   color: var(--creme);
   border: 1px solid rgba(245, 243, 238, 0.28);
   border-radius: 12px;
-  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
+  transition:
+    border-color 0.25s,
+    background-color 0.25s,
+    color 0.25s;
 }
 
 .conta-inicial {
@@ -2453,46 +2495,11 @@ a.card-produto {
   border-top: 1px solid rgba(245, 243, 238, 0.12);
 }
 
-/* Botão "Sair" (é um <button> dentro de <form>, pois logout deve ser POST) */
-.btn-sair {
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;   /* herda o preto do menu, sem o branco padrão do navegador */
-  border: 0;
-  margin: 0;
-  font-family: inherit;
-  cursor: pointer;
-}
 
-.btn-sair:focus-visible {
-  outline: 1px solid var(--dourado);
-  outline-offset: 4px;
-}
-
-.menu-mobile-conta .btn-sair {
-  padding: 0;
-  background-color: var(--preto);
-  font-size: 14px;
-  text-align: left;
-  color: var(--creme-escuro);
-  transition: color 0.2s;
-}
-
-.menu-mobile-conta .btn-sair:hover { color: var(--dourado); }
-
-@keyframes conta-abrir {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .conta-dropdown { animation: none; }
-}
 /* ==================================================
-   ÍCONE DE PESSOA (desktop) + botão Sair pintado
+   ÍCONE DE PERFIL
    ================================================== */
 
-/* .acoes-desktop já some abaixo de 1024px, então isso é só desktop */
 .botao-pessoa {
   display: inline-flex;
   align-items: center;
@@ -2503,7 +2510,10 @@ a.card-produto {
   border: 1px solid rgba(245, 243, 238, 0.28);
   border-radius: 12px;
   cursor: pointer;
-  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
+  transition:
+    border-color 0.25s,
+    background-color 0.25s,
+    color 0.25s;
 }
 
 .botao-pessoa:hover,
@@ -2513,7 +2523,31 @@ a.card-produto {
   color: var(--dourado);
 }
 
-/* Botão "Sair" do menu: contorno dourado, preenche no hover */
+
+/* ==================================================
+   BOTÃO SAIR
+   ================================================== */
+
+.btn-sair {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn-sair:focus-visible {
+  outline: 1px solid var(--dourado);
+  outline-offset: 4px;
+}
+
+.menu-mobile-conta form {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
 .menu-mobile-conta .btn-sair {
   align-self: flex-start;
   margin-top: 6px;
@@ -2525,12 +2559,39 @@ a.card-produto {
   font-size: 12px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
+  text-align: left;
   color: var(--dourado);
   cursor: pointer;
-  transition: background-color 0.25s, color 0.25s;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
 }
 
 .menu-mobile-conta .btn-sair:hover {
   background-color: var(--dourado);
   color: var(--preto);
+}
+
+@keyframes conta-abrir {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .botao-pessoa {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .conta-dropdown {
+    animation: none;
+  }
 }

@@ -39,7 +39,10 @@
         <p class="produto-descricao-breve">{{ produto.descricao }}</p>
 
         <div class="produto-acoes">
-          <a href="{% url 'carrinho' %}" class="btn-dourado">Adicionar ao carrinho</a>
+          <form action="{% url 'adicionar_ao_carrinho' produto.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-dourado">Adicionar ao carrinho</button>
+          </form>
           <a href="#" class="btn-contorno">Comprar agora</a>
         </div>
 
@@ -78,8 +81,7 @@
           <h3>{{ item.nome }}</h3>
           <div class="precos"><span class="preco-atual">R$ {{ item.preco }}</span></div>
         </a>
-        {% endfor %}
-                {% empty %}
+        {% empty %}
         <p>Nenhum produto em destaque no momento.</p>
         {% endfor %}
       </div>

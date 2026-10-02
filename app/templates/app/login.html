@@ -7,101 +7,307 @@
 
 {% block content %}
 
-    <div class="auth-wrapper">
+<div class="auth-wrapper">
 
-      <!-- PAINEL EDITORIAL -->
-      <section class="auth-editorial" aria-hidden="true">
-        <div class="auth-editorial-topo">
-          <span class="auth-editorial-eyebrow">Coleção 2026</span>
-          <h2>Bem-vinda de volta ao seu guarda-roupa.</h2>
-          <p>Acesse sua conta pra acompanhar pedidos, favoritos e as novidades da coleção antes de todo mundo.</p>
+  <!-- LADO EDITORIAL -->
+  <section class="auth-editorial" aria-hidden="true">
+
+    <div class="auth-editorial-topo">
+      <span class="auth-editorial-eyebrow">
+        Coleção 2026
+      </span>
+
+      <h2>
+        Bem-vinda de volta ao seu guarda-roupa.
+      </h2>
+
+      <p>
+        Acesse sua conta pra acompanhar pedidos,
+        favoritos e as novidades da coleção antes
+        de todo mundo.
+      </p>
+    </div>
+
+    <div class="auth-editorial-base">
+      <div class="auth-editorial-citacao">
+        <p>
+          "Peças que atravessam estações,
+          não tendências."
+        </p>
+
+        <span>
+          Recreio Conceito
+        </span>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- LADO DO FORMULÁRIO -->
+  <section class="auth-form-lado">
+
+    <div class="auth-form-box">
+
+      {% include 'app/_mensagens.html' %}
+
+      <h1>Entrar</h1>
+
+      <p class="auth-subtitulo">
+        Ainda não tem conta?
+        <a href="{% url 'cadastro' %}">
+          Cadastre-se gratuitamente
+        </a>
+      </p>
+
+
+      <!-- ERROS DO FORMULÁRIO -->
+
+      {% if form.non_field_errors %}
+        <div
+          class="campo-erro"
+          style="
+            margin-bottom: 15px;
+            display: block;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 10px;
+            border-radius: 4px;
+          "
+        >
+          {% for erro in form.non_field_errors %}
+            {{ erro }}
+          {% endfor %}
         </div>
-        <div class="auth-editorial-base">
-          <div class="auth-editorial-citacao">
-            <p>"Peças que atravessam estações, não tendências."</p>
-            <span>Recreio Conceito</span>
-          </div>
-        </div>
-      </section>
+      {% endif %}
+
 
       <!-- FORMULÁRIO DE LOGIN -->
-      <section class="auth-form-lado">
-        <div class="auth-form-box">
 
-          {% include 'app/_mensagens.html' %}
+      <form
+        method="post"
+        action="{% url 'login' %}"
+        novalidate
+      >
 
-          <h1>Entrar</h1>
-          <p class="auth-subtitulo">
-            Ainda não tem conta? <a href="{% url 'cadastro' %}">Cadastre-se gratuitamente</a>
-          </p>
+        {% csrf_token %}
 
-          <form method="post" action="{% url 'login' %}" novalidate>
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}">
+        <input
+          type="hidden"
+          name="next"
+          value="{{ next }}"
+        >
 
-            <div class="campo-grupo">
-              <label for="id_email" class="campo-label">E-mail</label>
-              <div class="campo-input-wrap">
-                <input type="email" id="id_email" name="email" value="{{ form.email.value|default:'' }}" class="campo-input" placeholder="voce@email.com" autocomplete="email" required>
-              </div>
-              {% if form.email.errors %}
-                <span class="campo-erro">{{ form.email.errors.0 }}</span>
-              {% endif %}
-            </div>
 
-            <div class="campo-grupo">
-              <label for="id_senha" class="campo-label">Senha</label>
-              <div class="campo-input-wrap">
-                <input type="password" id="id_senha" name="senha" class="campo-input" placeholder="••••••••" autocomplete="current-password" required>
-                <button type="button" class="campo-toggle-senha" aria-label="Mostrar senha" data-toggle-senha="id_senha">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </svg>
-                </button>
-              </div>
-              {% if form.senha.errors %}
-                <span class="campo-erro">{{ form.senha.errors.0 }}</span>
-              {% endif %}
-            </div>
+        <!-- E-MAIL -->
 
-            <div class="auth-linha-aux">
-              <label class="check-lembrar">
-                <input type="checkbox" name="lembrar">
-                Lembrar de mim
-              </label>
-              <a href="#" class="link-esqueci">Esqueci minha senha</a>
-            </div>
+        <div class="campo-grupo">
 
-            {% if form.non_field_errors %}
-              <span class="campo-erro" style="display:block; margin-bottom:16px;">{{ form.non_field_errors.0 }}</span>
-            {% endif %}
+          <label
+            for="id_email"
+            class="campo-label"
+          >
+            E-mail
+          </label>
 
-            <button type="submit" class="btn-auth-submit">Entrar</button>
-          </form>
+          <div class="campo-input-wrap">
 
-          <div class="auth-divisor">ou continue com</div>
+            <input
+              type="email"
+              id="id_email"
+              name="email"
+              value="{{ form.email.value|default:'' }}"
+              class="campo-input"
+              placeholder="voce@email.com"
+              autocomplete="email"
+              required
+            >
 
-          <div class="auth-social">
-            <form method="post" action="/accounts/google/login/" style="display:contents">
-              {% csrf_token %}
-              <input type="hidden" name="process" value="login">
-              {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-              <button type="submit" class="btn-social">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46a5.52 5.52 0 0 1-2.4 3.62v3h3.88c2.27-2.09 3.58-5.17 3.58-8.81z"/>
-                  <path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.92l-3.88-3c-1.08.72-2.45 1.15-4.06 1.15-3.12 0-5.77-2.11-6.71-4.95H1.28v3.09A12 12 0 0 0 12 24z"/>
-                  <path fill="#FBBC05" d="M5.29 14.28A7.2 7.2 0 0 1 4.91 12c0-.79.14-1.56.38-2.28V6.63H1.28A12 12 0 0 0 0 12c0 1.94.46 3.77 1.28 5.37l4.01-3.09z"/>
-                  <path fill="#EA4335" d="M12 4.77c1.76 0 3.34.61 4.59 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0A12 12 0 0 0 1.28 6.63l4.01 3.09C6.23 6.88 8.88 4.77 12 4.77z"/>
-                </svg>
-                Continuar com Google
-              </button>
-            </form>
           </div>
 
+          {% if form.email.errors %}
+            <div class="campo-erro">
+              {% for erro in form.email.errors %}
+                {{ erro }}
+              {% endfor %}
+            </div>
+          {% endif %}
+
         </div>
-      </section>
+
+
+        <!-- SENHA -->
+
+        <div class="campo-grupo">
+
+          <label
+            for="id_password"
+            class="campo-label"
+          >
+            Senha
+          </label>
+
+          <div class="campo-input-wrap">
+
+            <input
+              type="password"
+              id="id_password"
+              name="password"
+              class="campo-input"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            >
+
+            <button
+              type="button"
+              class="campo-toggle-senha"
+              aria-label="Mostrar senha"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+
+            </button>
+
+          </div>
+
+          {% if form.password.errors %}
+            <div class="campo-erro">
+              {% for erro in form.password.errors %}
+                {{ erro }}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        </div>
+
+
+        <!-- LEMBRAR / ESQUECI SENHA -->
+
+        <div class="auth-linha-aux">
+
+          <label class="check-lembrar">
+
+            <input
+              type="checkbox"
+              name="lembrar"
+            >
+
+            Lembrar de mim
+
+          </label>
+
+          <a
+            href="#"
+            class="link-esqueci"
+          >
+            Esqueci minha senha
+          </a>
+
+        </div>
+
+
+        <!-- ENTRAR -->
+
+        <button
+          type="submit"
+          class="btn-auth-submit"
+        >
+          Entrar
+        </button>
+
+      </form>
+
+
+      <!-- DIVISOR -->
+
+      <div class="auth-divisor">
+        ou continue com
+      </div>
+
+
+      <!-- LOGIN GOOGLE -->
+
+      <div class="auth-social">
+
+        <form
+          method="post"
+          action="/accounts/google/login/"
+          style="display: contents;"
+        >
+
+          {% csrf_token %}
+
+          <input
+            type="hidden"
+            name="process"
+            value="login"
+          >
+
+          {% if next %}
+            <input
+              type="hidden"
+              name="next"
+              value="{{ next }}"
+            >
+          {% endif %}
+
+
+          <button
+            type="submit"
+            class="btn-social"
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+
+              <path
+                fill="#4285F4"
+                d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.46a5.52 5.52 0 0 1-2.4 3.62v3h3.88c2.27-2.09 3.58-5.17 3.58-8.81z"
+              />
+
+              <path
+                fill="#34A853"
+                d="M12 24c3.24 0 5.96-1.07 7.94-2.92l-3.88-3c-1.08.72-2.45 1.15-4.06 1.15-3.12 0-5.77-2.11-6.71-4.95H1.28v3.09A12 12 0 0 0 12 24z"
+              />
+
+              <path
+                fill="#FBBC05"
+                d="M5.29 14.28A7.2 7.2 0 0 1 4.91 12c0-.79.14-1.56.38-2.28V6.63H1.28A12 12 0 0 0 0 12c0 1.94.46 3.77 1.28 5.37l4.01-3.09z"
+              />
+
+              <path
+                fill="#EA4335"
+                d="M12 4.77c1.76 0 3.34.61 4.59 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0A12 12 0 0 0 1.28 6.63l4.01 3.09C6.23 6.88 8.88 4.77 12 4.77z"
+              />
+
+            </svg>
+
+            Continuar com Google
+
+          </button>
+
+        </form>
+
+      </div>
 
     </div>
 
-{% endblock %}    
+  </section>
+
+</div>
+
+{% endblock %}
