@@ -1,19 +1,33 @@
 def carrinho(request):
-    """Quantidade de itens da sacola. Fica 0 até o backend preencher
-    request.session['carrinho'] no formato {produto_id: quantidade}."""
-    itens = request.session.get('carrinho', {})
-    total = sum(itens.values()) if isinstance(itens, dict) else 0
-    return {'carrinho_qtd': total}
+    """Quantidade total de itens da sacola.
 
-
-# mesmo nome que o settings.py já usa
-def carrinho(request):
-    """Quantidade de itens da sacola. Fica 0 até o backend preencher
-    request.session['carrinho'] no formato {produto_id: quantidade}."""
+    Aceita os dois formatos da sessão:
+    {produto_id: {'quantidade': n}}  (atual)
+    {produto_id: n}                  (antigo)
+    """
     itens = request.session.get('carrinho', {})
-    total = sum(itens.values()) if isinstance(itens, dict) else 0
+
+    if not isinstance(itens, dict):
+        return {'carrinho_qtd': 0}
+
+    total = 0
+    for dados in itens.values():
+        if isinstance(dados, dict):
+            total += dados.get('quantidade', 1)
+        else:
+            total += dados
+
     return {'carrinho_qtd': total}
 
 
 # mesmo nome que o settings.py já usa
 carrinho_contador = carrinho
+
+
+def curtidos_contador(request):
+    """Ids e total de produtos curtidos (disponível em todos os templates)."""
+    ids = request.session.get('curtidos', [])
+    return {
+        'curtidos_ids': ids,
+        'curtidos_qtd': len(ids),
+    }

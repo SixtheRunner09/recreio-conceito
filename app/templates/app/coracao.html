@@ -1,0 +1,13 @@
+<form method="post" action="{% url 'alternar_curtida' produto.pk %}" class="form-curtir">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  <button
+    type="submit"
+    class="btn-curtir{% if produto.pk in curtidos_ids %} ativo{% endif %}"
+    title="{% if produto.pk in curtidos_ids %}Remover dos curtidos{% else %}Adicionar aos curtidos{% endif %}"
+    aria-pressed="{% if produto.pk in curtidos_ids %}true{% else %}false{% endif %}"
+    aria-label="{% if produto.pk in curtidos_ids %}Remover dos curtidos:{% else %}Curtir:{% endif %} {{ produto.nome }}"
+  >
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><use href="#icone-coracao"/></svg>
+  </button>
+</form>

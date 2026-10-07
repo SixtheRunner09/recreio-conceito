@@ -67,7 +67,7 @@ header {
   padding: 20px 48px;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 200;
 }
 
 .logo {
@@ -440,6 +440,7 @@ nav a.ativo {
 .hero-card-preco strong {
   font-size: 17px;
   font-weight: 500;
+  color: var(--dourado);
 }
 
 .hero-card-seta {
@@ -893,15 +894,10 @@ footer {
   .slide img {
     height: 320px;
   }
-
-  .grid-produtos {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ==================================================
    PÁGINA DE PRODUTO
-   Cole no FINAL do style.css
    ================================================== */
 
 /* -------- Migalha de pão -------- */
@@ -1486,7 +1482,6 @@ a.card-produto {
 
 /* ==================================================
    NAVBAR MOBILE (menu de 3 traços)
-   Cole no FINAL do style.css
    ================================================== */
 
 /* Esconde o checkbox que controla tudo — não usamos JS aqui */
@@ -1497,8 +1492,7 @@ a.card-produto {
 }
 
 /* Os dois grupos de ícones do header: um pra desktop, outro pra mobile.
-   No desktop só o carrinho aparece (como já era). No mobile, o conteúdo
-   muda conforme o usuário estar logado ou não — ver o {% if %} no HTML. */
+   No mobile, o conteúdo muda conforme o usuário estar logado ou não. */
 
 .acoes-desktop {
   display: flex;
@@ -1765,9 +1759,9 @@ a.card-produto {
     display: flex;
   }
 }
+
 /* ==================================================
    PÁGINAS DE AUTENTICAÇÃO (Login / Cadastro)
-   Cole no FINAL do style.css
    ================================================== */
 
 .auth-wrapper {
@@ -2204,9 +2198,8 @@ a.card-produto {
     gap: 14px;
   }
 }
+
 /* ==================================================
-<<<<<<< HEAD
-   /* ==================================================
    NOTIFICAÇÕES (toast)
    ================================================== */
 
@@ -2594,4 +2587,343 @@ a.card-produto {
   .conta-dropdown {
     animation: none;
   }
+}
+
+
+/* ==================================================
+   COLEÇÕES (home + página de coleção)
+   ================================================== */
+
+/* ---------- Seção de coleções: faixa preta de ponta a ponta ---------- */
+.secao-colecoes{
+  background: var(--preto);
+  color: var(--creme);
+  padding:5rem max(1.5rem, calc((100% - 1240px) / 2));
+}
+.secao-colecoes .titulo-secao h2,
+.secao-colecoes .titulo-secao p,
+.secao-colecoes .secao-cab h1{color:#f5f3ee}
+.secao-colecoes .titulo-secao p{opacity:.65}
+
+/* ---------- Cabeçalho da página de coleção ---------- */
+.secao-cab{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:.6rem;
+  padding-top:2.5rem;
+  margin-bottom:2rem;
+}
+.secao-cab > *{
+  margin:0;
+  max-width:100%;
+}
+.secao-cab .eyebrow{font:500 .75rem 'Jost',system-ui,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--dourado,#c9a24b);margin:0 0 .5rem}
+.secao-cab h1{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-weight:500;
+  font-size:clamp(2.4rem, 8vw, 3.6rem);
+  line-height:1.05;
+  overflow-wrap:anywhere;
+  margin:0;
+}
+.secao-cab .sub{font:400 1rem 'Jost',system-ui,sans-serif;opacity:.7;margin:.75rem 0 0;max-width:46ch}
+
+.voltar{font:500 .75rem 'Jost',system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--dourado,#c9a24b);text-decoration:none;display:inline-block;margin-bottom:1.25rem}
+.voltar:hover{text-decoration:underline}
+.secao-cab .voltar{
+  position:absolute;
+  top:0;
+  left:0;
+  margin:0;
+  font-size:.65rem;
+  letter-spacing:.16em;
+}
+
+/* ---------- Grade ---------- */
+.colecoes-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));
+  gap:1.5rem;
+  margin-top:2.5rem;
+}
+
+/* ---------- Cartão (formato 2:3) ---------- */
+.colecao-card{
+  --c-fundo:#1c1c1c;
+  --c-realce:var(--dourado,#c9a24b);
+  position:relative;isolation:isolate;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between;
+  aspect-ratio:2 / 3;padding:1.75rem 1.75rem 2rem;
+  color:#f5f3ee;text-decoration:none;
+  background:linear-gradient(145deg,var(--c-fundo) 0%,var(--preto) 170%);
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:0 18px 40px -20px rgba(0,0,0,.8);
+  transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s,border-color .45s;
+}
+.colecao-card::before{
+  content:"";position:absolute;inset:0;z-index:-2;
+  background:var(--img,none) center/cover no-repeat;
+  transition:transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.colecao-card::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.85) 100%);
+}
+.colecao-card:hover{
+  transform:translateY(-8px);
+  border-color:var(--c-realce);
+  box-shadow:0 28px 54px -20px rgba(0,0,0,.9);
+}
+.colecao-card:hover::before{transform:scale(1.07)}
+
+.colecao-count{
+  align-self:flex-start;
+  font:500 .72rem 'Jost',system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;
+  padding:.45rem .8rem;border:1px solid rgba(245,243,238,.4);
+  backdrop-filter:blur(4px);
+}
+
+.colecao-card .colecao-info h3{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-weight:500;
+  font-size:clamp(2.6rem, 3.2vw, 3.4rem);
+  line-height:1;
+  letter-spacing:-0.01em;
+  margin:0 0 .75rem;
+  text-shadow:0 2px 18px rgba(0,0,0,.45);
+}
+
+.colecao-card .colecao-info p{
+  font:400 .85rem/1.55 'Jost',system-ui,sans-serif;
+  letter-spacing:.02em;
+  opacity:.75;
+  max-width:26ch;
+  margin:0 0 1.5rem;
+}
+
+.colecao-link{
+  display:inline-flex;align-items:center;gap:.65rem;
+  font:500 .8rem 'Jost',system-ui,sans-serif;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--c-realce);
+  padding-bottom:.5rem;border-bottom:1px solid var(--c-realce);
+  transition:gap .3s;
+}
+.colecao-link i{font-style:normal;transition:transform .3s}
+.colecao-card:hover .colecao-link{gap:1rem}
+.colecao-card:hover .colecao-link i{transform:translateX(4px)}
+.colecao-card:focus-visible{outline:2px solid var(--c-realce);outline-offset:-6px}
+
+.secao-colecoes .vazio{opacity:.7}
+
+/* ---------- No painel: mesma paleta do painel ---------- */
+.painel .colecao-card{--c-fundo:var(--tinta);--c-realce:#cbbff2;min-height:0}
+.painel .colecao-info h3{font-size:2.1rem}
+.painel .colecoes-grid{margin-top:1rem}
+.colecao-wrap{display:flex;flex-direction:column;gap:.6rem}
+
+/* ---------- Produtos dentro da coleção ---------- */
+.produtos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));
+  gap:1.5rem;
+  padding-inline:clamp(1.5rem, 5vw, 3rem);
+  padding-bottom:3rem;
+}
+.produto-mini{color:inherit;text-decoration:none}
+.produto-mini img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.produto-mini h3{font:500 1.4rem 'Cormorant Garamond',Georgia,serif;margin:.85rem 0 .15rem}
+.produto-mini p{font:400 .95rem 'Jost',system-ui,sans-serif;opacity:.7;margin:0}
+
+/* ---------- Coleções no celular: arrastar para o lado ---------- */
+@media (max-width:600px){
+  .secao-colecoes{padding-top:3.5rem;padding-bottom:3.5rem}
+  .colecao-card .colecao-info h3{font-size:2.4rem}
+
+  .produtos-grid{
+    grid-template-columns:repeat(2, 1fr);
+    gap:1rem;
+  }
+
+  .secao-colecoes .colecoes-grid{
+    display:flex;
+    align-items:flex-start;
+    gap:1rem;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    margin-inline:-1.5rem;
+    padding:0 1.5rem 1rem;
+    scroll-padding-inline:1.5rem;
+  }
+
+  .secao-colecoes .colecoes-grid::-webkit-scrollbar{
+    height:4px;
+  }
+
+  .secao-colecoes .colecoes-grid::-webkit-scrollbar-thumb{
+    background-color:var(--dourado);
+  }
+
+  .secao-colecoes .colecao-card{
+    flex:0 0 72vw;
+    max-width:300px;
+    scroll-snap-align:start;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .colecao-card,.colecao-card::before,.colecao-link,.colecao-link i{transition:none}
+}
+
+
+/* ==================================================
+   GRADES DE PRODUTOS: 2 COLUNAS NO CELULAR
+   ================================================== */
+
+@media (max-width:600px){
+  .grid-produtos{
+    display:grid !important;
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+    gap:1rem .75rem;
+    padding-inline:1rem;
+  }
+
+  .grid-produtos .card-imagem{
+    margin-bottom:10px;
+  }
+
+  .grid-produtos .card-imagem img{
+    height:auto;
+    aspect-ratio:3 / 4;
+    object-fit:cover;
+  }
+
+  .grid-produtos .card-produto h3{
+    font-size:1rem;
+    margin-bottom:4px;
+  }
+
+  .grid-produtos .card-produto .categoria{
+    font-size:10px;
+    margin-bottom:4px;
+  }
+
+  .grid-produtos .preco-atual{
+    font-size:15px;
+  }
+
+  .grid-produtos .preco-antigo{
+    font-size:12px;
+  }
+
+  .grid-produtos .card-wrap .form-curtir{
+    top:8px;
+    right:8px;
+  }
+
+  .grid-produtos .card-wrap .btn-curtir{
+    width:30px;
+    height:30px;
+  }
+
+  .grid-produtos .card-wrap .btn-curtir svg{
+    width:16px;
+    height:16px;
+  }
+}
+
+
+/* ==================================================
+   MAIS VENDIDOS: carrossel horizontal (quadrados pequenos)
+   Fica depois do bloco de 2 colunas para vencer a ele no celular.
+   ================================================== */
+
+.secao-mais-vendidos .grid-produtos{
+  display:flex !important;
+  gap:1rem;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-padding-inline:clamp(1.5rem, 5vw, 3rem);
+  -webkit-overflow-scrolling:touch;
+  padding-inline:clamp(1.5rem, 5vw, 3rem);
+  padding-bottom:1rem;
+}
+
+.secao-mais-vendidos .grid-produtos::-webkit-scrollbar{
+  height:4px;
+}
+
+.secao-mais-vendidos .grid-produtos::-webkit-scrollbar-thumb{
+  background-color:var(--dourado);
+}
+
+.secao-mais-vendidos .card-wrap{
+  flex:0 0 clamp(150px, 42vw, 200px);
+  scroll-snap-align:start;
+}
+
+/* Imagem quadrada */
+.secao-mais-vendidos .card-imagem{
+  margin-bottom:10px;
+}
+
+.secao-mais-vendidos .card-imagem img{
+  width:100%;
+  height:auto;
+  aspect-ratio:1 / 1;
+  object-fit:cover;
+}
+
+/* Textos legíveis no fundo claro */
+.secao-mais-vendidos .card-produto h3{
+  color:var(--preto);
+  font-size:1rem;
+  margin-bottom:4px;
+}
+
+.secao-mais-vendidos .card-produto .categoria{
+  font-size:10px;
+  margin-bottom:4px;
+}
+
+.secao-mais-vendidos .card-produto:not(.em-oferta) .preco-atual,
+.secao-mais-vendidos .preco-atual{
+  color:var(--dourado-escuro);
+  font-size:15px;
+}
+
+/* Coração menor, proporcional ao card */
+.secao-mais-vendidos .card-wrap .form-curtir{
+  top:8px;
+  right:8px;
+}
+
+.secao-mais-vendidos .card-wrap .btn-curtir{
+  width:30px;
+  height:30px;
+}
+
+.secao-mais-vendidos .card-wrap .btn-curtir svg{
+  width:16px;
+  height:16px;
+}
+
+
+/* ==================================================
+   ROLAGEM SUAVE (link "Ofertas")
+   ================================================== */
+
+html{
+  scroll-behavior:smooth;
+}
+
+#ofertas{
+  scroll-margin-top:88px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
 }

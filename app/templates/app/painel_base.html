@@ -1,0 +1,105 @@
+{% extends 'app/base.html' %}
+
+{% block titulo %}Painel — Recreio Conceito{% endblock %}
+
+{% block content %}
+<style>
+  .painel {
+    --tinta: #1f2233;
+    --papel: #eceeea;
+    --linha: #cfd2cc;
+    --destaque: #4b3f72;
+    --alerta: #9a3b2e;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 4.5rem) 1.5rem;
+    color: var(--tinta);
+  }
+  .painel h1 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    line-height: 1.05;
+    margin: 0 0 .5rem;
+    color: var(--destaque);
+  }
+  .painel h2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 500;
+    font-size: 1.6rem;
+    margin: 0 0 1rem;
+  }
+  .painel .sub { margin: 0 0 3rem; opacity: .7; }
+
+  .numeros {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    border-block: 1px solid var(--linha);
+    margin-bottom: 3rem;
+  }
+  .numeros > div { padding: 1.5rem 1.25rem 1.5rem 0; }
+  .numeros > div + div { padding-left: 1.25rem; border-left: 1px solid var(--linha); }
+  .numeros strong {
+    display: block;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 2.75rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .numeros span { font-size: .9rem; opacity: .7; }
+
+  .acoes { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 3.5rem; }
+  .btn {
+    display: inline-block;
+    padding: .8rem 1.4rem;
+    border: 1px solid var(--tinta);
+    background: transparent;
+    color: var(--tinta);
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .btn.principal { background: var(--tinta); color: var(--papel); }
+  .btn:hover { background: var(--destaque); border-color: var(--destaque); color: #fff; }
+  .btn:focus-visible, .campo:focus-visible { outline: 3px solid var(--destaque); outline-offset: 2px; }
+
+  .topo { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+  .topo h1 { margin: 0; }
+
+  .tabela { width: 100%; border-collapse: collapse; }
+  .tabela th, .tabela td { text-align: left; padding: .8rem .75rem .8rem 0; border-bottom: 1px solid var(--linha); vertical-align: middle; }
+  .tabela th { font-weight: 500; font-size: .85rem; opacity: .6; }
+  .tabela .num { text-align: right; padding-right: 0; white-space: nowrap; }
+  .tabela form { display: inline; }
+  .tabela a { color: var(--destaque); }
+  .link { background: none; border: 0; padding: 0; font: inherit; color: var(--destaque); text-decoration: underline; cursor: pointer; }
+  .link.perigo { color: var(--alerta); margin-left: 1rem; }
+  .vazio { padding: 2rem 0; opacity: .75; }
+
+  .form { max-width: 560px; }
+  .linha { margin-bottom: 1.25rem; }
+  .linha label { display: block; margin-bottom: .35rem; font-size: .95rem; }
+  .linha label.check { display: flex; align-items: center; gap: .5rem; }
+  .campo {
+    width: 100%;
+    padding: .7rem .8rem;
+    border: 1px solid var(--linha);
+    background: #fff;
+    color: var(--tinta);
+    font: inherit;
+  }
+  .linha small { display: block; margin-top: .3rem; opacity: .65; }
+  .linha .msg-erro { color: var(--alerta); opacity: 1; }
+  .form .botoes { display: flex; gap: .75rem; margin-top: 2rem; }
+
+  @media (max-width: 560px) {
+    .numeros > div + div { border-left: 0; }
+    .numeros > div { border-bottom: 1px solid var(--linha); }
+  }
+</style>
+
+<section class="painel">
+  {% block painel %}{% endblock %}
+</section>
+{% endblock %}

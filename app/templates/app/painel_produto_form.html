@@ -1,0 +1,111 @@
+{% extends 'app/painel_base.html' %}
+
+{% block painel %}
+  <style>
+    .chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .chip { position: relative; cursor: pointer; }
+    .chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+    .chip span {
+      display: inline-block;
+      padding: .5rem 1rem;
+      border: 1px solid var(--linha);
+      background: #fff;
+      font-size: .9rem;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .chip:hover span { border-color: var(--destaque); }
+    .chip input:checked + span { background: var(--destaque); border-color: var(--destaque); color: #fff; }
+    .chip input:focus-visible + span { outline: 3px solid var(--destaque); outline-offset: 2px; }
+
+    .previas, .fotos-atuais { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .75rem; }
+    .previas img, .foto-atual img {
+      width: 96px; height: 120px; object-fit: cover; display: block; border: 1px solid var(--linha);
+    }
+    .foto-atual { display: flex; flex-direction: column; gap: .35rem; font-size: .8rem; margin: 0; }
+    .foto-atual span { display: flex; align-items: center; gap: .35rem; }
+  </style>
+
+  <div class="topo">
+    <h1>{% if editando %}Editar produto{% else %}Novo produto{% endif %}</h1>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="form" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% for campo in form %}
+    {% if campo.name != 'colecoes' %}
+    <div class="linha">
+      {% if campo.field.widget.input_type == 'checkbox' %}
+        <label class="check">{{ campo }} {{ campo.label }}</label>
+      {% else %}
+        <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+        {{ campo }}
+      {% endif %}
+      {% if campo.help_text %}<small>{{ campo.help_text }}</small>{% endif %}
+      {% for erro in campo.errors %}<small class="msg-erro">{{ erro }}</small>{% endfor %}
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    <!-- MAIS FOTOS -->
+    <div class="linha">
+      <label for="id_imagens">Mais fotos</label>
+      <input class="campo" type="file" id="id_imagens" name="imagens" accept="image/*" multiple>
+      <small>Escolha várias de uma vez. Na página inicial elas passam sozinhas (a cada 3s) e na página do produto dá para arrastar para o lado.</small>
+      <div class="previas" id="previas"></div>
+    </div>
+
+    {% if imagens_extras %}
+    <div class="linha">
+      <label>Fotos já enviadas</label>
+      <div class="fotos-atuais">
+        {% for f in imagens_extras %}
+        <label class="foto-atual">
+          <img src="{{ f.imagem.url }}" alt="">
+          <span><input type="checkbox" name="remover_imagens" value="{{ f.pk }}"> Remover</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- COLEÇÕES -->
+    <div class="linha">
+      <label>Coleções</label>
+      {% if form.colecoes.field.queryset.exists %}
+        <div class="chips">
+          {% for opcao in form.colecoes %}
+            <label class="chip">{{ opcao.tag }}<span>{{ opcao.choice_label }}</span></label>
+          {% endfor %}
+        </div>
+        <small>Marque uma ou mais coleções para este produto.</small>
+      {% else %}
+        <small>Nenhuma coleção criada ainda. <a href="{% url 'painel_colecoes' %}">Criar coleção</a></small>
+      {% endif %}
+      {% for erro in form.colecoes.errors %}<small class="msg-erro">{{ erro }}</small>{% endfor %}
+    </div>
+
+    <div class="botoes">
+      <button type="submit" class="btn principal">{% if editando %}Salvar alterações{% else %}Cadastrar produto{% endif %}</button>
+      <a class="btn" href="{% url 'painel_produtos' %}">Cancelar</a>
+    </div>
+  </form>
+
+  <script>
+    (function () {
+      var input = document.getElementById('id_imagens');
+      var caixa = document.getElementById('previas');
+      if (!input || !caixa) return;
+      input.addEventListener('change', function () {
+        caixa.innerHTML = '';
+        Array.prototype.forEach.call(input.files, function (arq) {
+          var img = document.createElement('img');
+          img.alt = '';
+          img.src = URL.createObjectURL(arq);
+          caixa.appendChild(img);
+        });
+      });
+    })();
+  </script>
+{% endblock %}

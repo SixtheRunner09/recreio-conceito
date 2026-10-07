@@ -113,13 +113,13 @@
           <div class="campo-input-wrap">
 
             <input
-              type="email"
+              type="text"
               id="id_email"
               name="email"
               value="{{ form.email.value|default:'' }}"
               class="campo-input"
               placeholder="voce@email.com"
-              autocomplete="email"
+              autocomplete="username"
               required
             >
 
@@ -182,9 +182,9 @@
 
           </div>
 
-          {% if form.password.errors %}
+          {% if form.senha.errors %}
             <div class="campo-erro">
-              {% for erro in form.password.errors %}
+              {% for erro in form.senha.errors %}
                 {{ erro }}
               {% endfor %}
             </div>

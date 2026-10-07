@@ -1,0 +1,26 @@
+{% extends 'app/base.html' %}
+{% block titulo %}Coleções — Recreio Conceito{% endblock %}
+
+{% block content %}
+<section class="secao-colecoes">
+  <header class="secao-cab">
+    <p class="eyebrow">Explore</p>
+    <h1>Coleções</h1>
+  </header>
+  <div class="colecoes-grid">
+        {% for c in colecoes %}
+        <a class="colecao-card" href="{% url 'colecao_detalhe' c.pk %}"
+           {% if c.imagem %}style="--img:url('{{ c.imagem.url }}')"{% endif %}>
+          <span class="colecao-count">{{ c.total }} peça{{ c.total|pluralize }}</span>
+          <div class="colecao-info">
+            <h3>{{ c.nome }}</h3>
+            {% if c.descricao %}<p>{{ c.descricao }}</p>{% endif %}
+            <span class="colecao-link">Ver coleção <i aria-hidden="true">→</i></span>
+          </div>
+        </a>
+        {% empty %}
+        <p class="vazio">Nenhuma coleção ainda.</p>
+        {% endfor %}
+      </div>
+</section>
+{% endblock %}

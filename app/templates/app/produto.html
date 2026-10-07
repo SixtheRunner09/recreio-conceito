@@ -3,6 +3,51 @@
 
 {% block titulo %}{{ produto.nome }} — Recreio Conceito{% endblock %}
 
+{% block extra_head %}
+<style>
+  /* Galeria de fotos: arrastar para o lado */
+  .gf { position: relative; }
+  .gf-trilho {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .gf-trilho::-webkit-scrollbar { display: none; }
+  .gf-slide { flex: 0 0 100%; scroll-snap-align: center; }
+  .gf-slide img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+
+  .gf-seta {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 50%; border: 0;
+    background: rgba(255, 255, 255, .92); color: #111;
+    font-size: 1.7rem; line-height: 1; cursor: pointer;
+    display: grid; place-items: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+    transition: transform .2s, background .2s;
+  }
+  .gf-seta:hover { background: #fff; transform: translateY(-50%) scale(1.06); }
+  .gf-prev { left: .75rem; }
+  .gf-next { right: .75rem; }
+
+  .gf-pontos { display: flex; justify-content: center; gap: .5rem; margin-top: .9rem; }
+  .gf-pontos button {
+    width: 8px; height: 8px; padding: 0; border: 0; border-radius: 4px;
+    background: currentColor; opacity: .25; cursor: pointer;
+    transition: width .25s, opacity .25s, background .25s;
+  }
+  .gf-pontos button[aria-current="true"] {
+    width: 24px; opacity: 1; background: var(--dourado, currentColor);
+  }
+
+  .gf.unica .gf-seta, .gf.unica .gf-pontos { display: none; }
+  @media (hover: none) { .gf-seta { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .gf-trilho { scroll-behavior: auto; } }
+</style>
+{% endblock %}
+
 {% block content %}
 
     <div class="container migalha">
@@ -16,14 +61,25 @@
     <section class="produto-detalhe container">
 
       <div class="produto-galeria">
-        <div class="galeria-principal" id="galeria">
-          <div class="galeria-slide" id="foto1">
+        <div class="gf card-wrap" id="galeria">
+
+          {# Coração sobre a foto principal #}
+          {% include 'app/coracao.html' with produto=produto %}
+
+          <div class="gf-trilho">
             {% if produto.imagem %}
-              <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
-            {% else %}
-              <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ produto.nome }}">
+              <div class="gf-slide"><img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}"></div>
+            {% endif %}
+            {% for f in produto.imagens.all %}
+              <div class="gf-slide"><img src="{{ f.imagem.url }}" alt="{{ produto.nome }}" loading="lazy"></div>
+            {% endfor %}
+            {% if not produto.imagem and not produto.imagens.all %}
+              <div class="gf-slide"><img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ produto.nome }}"></div>
             {% endif %}
           </div>
+          <button type="button" class="gf-seta gf-prev" aria-label="Foto anterior">&#8249;</button>
+          <button type="button" class="gf-seta gf-next" aria-label="Próxima foto">&#8250;</button>
+          <div class="gf-pontos"></div>
         </div>
       </div>
 
@@ -69,22 +125,69 @@
 
       <div class="grid-produtos">
         {% for item in relacionados %}
-        <a href="{% url 'produto' item.pk %}" class="card-produto">
-          <div class="card-imagem">
-            {% if item.imagem %}
-              <img src="{{ item.imagem.url }}" alt="{{ item.nome }}">
-            {% else %}
-              <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ item.nome }}">
-            {% endif %}
-          </div>
-          <p class="categoria">{{ item.categoria }}</p>
-          <h3>{{ item.nome }}</h3>
-          <div class="precos"><span class="preco-atual">R$ {{ item.preco }}</span></div>
-        </a>
+        <div class="card-wrap">
+          {% include 'app/coracao.html' with produto=item %}
+
+          <a href="{% url 'produto' item.pk %}" class="card-produto">
+            <div class="card-imagem">
+              {% if item.imagem %}
+                <img src="{{ item.imagem.url }}" alt="{{ item.nome }}">
+              {% else %}
+                <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ item.nome }}">
+              {% endif %}
+            </div>
+            <p class="categoria">{{ item.categoria }}</p>
+            <h3>{{ item.nome }}</h3>
+            <div class="precos"><span class="preco-atual">R$ {{ item.preco }}</span></div>
+          </a>
+        </div>
         {% empty %}
         <p>Nenhum produto em destaque no momento.</p>
         {% endfor %}
       </div>
     </section>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  (function () {
+    var galeria = document.getElementById('galeria');
+    if (!galeria) return;
+
+    var trilho = galeria.querySelector('.gf-trilho');
+    var total = trilho.children.length;
+    var pontos = galeria.querySelector('.gf-pontos');
+
+    if (total < 2) { galeria.classList.add('unica'); return; }
+
+    var botoes = [];
+    function atual() { return Math.round(trilho.scrollLeft / trilho.clientWidth); }
+    function ir(i) {
+      i = Math.max(0, Math.min(total - 1, i));
+      trilho.scrollTo({ left: i * trilho.clientWidth });
+    }
+    function marcar() {
+      var a = atual();
+      botoes.forEach(function (b, i) {
+        if (i === a) b.setAttribute('aria-current', 'true');
+        else b.removeAttribute('aria-current');
+      });
+    }
+
+    for (let i = 0; i < total; i++) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Ver foto ' + (i + 1));
+      b.addEventListener('click', function () { ir(i); });
+      pontos.appendChild(b);
+      botoes.push(b);
+    }
+
+    trilho.addEventListener('scroll', function () { requestAnimationFrame(marcar); }, { passive: true });
+    galeria.querySelector('.gf-prev').addEventListener('click', function () { ir(atual() - 1); });
+    galeria.querySelector('.gf-next').addEventListener('click', function () { ir(atual() + 1); });
+    marcar();
+  })();
+</script>
 {% endblock %}

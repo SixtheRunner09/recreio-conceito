@@ -1,0 +1,41 @@
+{% extends 'app/painel_base.html' %}
+
+{% block painel %}
+  <h1>{{ saudacao }}, {{ nome }}</h1>
+  <p class="sub">Resumo da loja em {% now "d \d\e F" %}.</p>
+
+  <div class="numeros">
+    <div><strong>{{ numeros.total }}</strong><span>produtos cadastrados</span></div>
+    <div><strong>{{ numeros.em_oferta }}</strong><span>em oferta</span></div>
+    <div><strong>{{ numeros.destaques }}</strong><span>em destaque</span></div>
+    <div><strong>{{ numeros.colecoes }}</strong><span>coleções</span></div>
+  </div>
+
+  <nav class="acoes" aria-label="Ações rápidas">
+    <a class="btn principal" href="{% url 'painel_produto_novo' %}">Cadastrar produto</a>
+    <a class="btn" href="{% url 'painel_produtos' %}">Gerenciar produtos</a>
+    <a class="btn" href="{% url 'painel_colecoes' %}">Gerenciar coleções</a>
+  </nav>
+
+  <h2>Últimos produtos</h2>
+  {% if recentes %}
+  <table class="tabela">
+    <thead>
+      <tr>
+        <th scope="col">Produto</th>
+        <th scope="col" class="num">Preço</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in recentes %}
+      <tr>
+        <td><a href="{% url 'painel_produto_editar' p.pk %}">{{ p }}</a></td>
+        <td class="num">R$ {{ p.preco|floatformat:2 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="vazio">Nenhum produto ainda. Comece cadastrando a primeira peça.</p>
+  {% endif %}
+{% endblock %}

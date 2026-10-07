@@ -3,6 +3,19 @@
 
 {% block titulo %}Produtos — Recreio Conceito{% endblock %}
 
+{% block extra_head %}
+<style>
+  /* Fotos que alternam sozinhas */
+  .fotos-auto { position: relative; display: block; }
+  .fotos-auto img { display: block; width: 100%; transition: opacity .9s ease; }
+  .fotos-auto img:not(:first-child) {
+    position: absolute; inset: 0; height: 100%; object-fit: cover; opacity: 0;
+  }
+  .fotos-auto.rodando img { opacity: 0; }
+  .fotos-auto.rodando img.ativa { opacity: 1; }
+</style>
+{% endblock %}
+
 {% block content %}
 
     <section class="secao-produtos">
@@ -14,33 +27,72 @@
       <div class="filtros">
         <a href="{% url 'produtos' %}" class="{% if not categoria_selecionada %}ativo{% endif %}">Todos</a>
         <a href="?categoria=Camisas" class="{% if categoria_selecionada == 'Camisas' %}ativo{% endif %}">Camisas</a>
-        <a href="?categoria=Vestidos" class="{% if categoria_selecionada == 'Vestidos' %}ativo{% endif %}">Vestidos</a>
-        <a href="?categoria=Alfaiataria" class="{% if categoria_selecionada == 'Alfaiataria' %}ativo{% endif %}">Alfaiataria</a>
-        <a href="?categoria=Saias" class="{% if categoria_selecionada == 'Saias' %}ativo{% endif %}">Saias</a>
+        <a href="?categoria=Calças" class="{% if categoria_selecionada == 'Calças' %}ativo{% endif %}">Calças</a>
+        <a href="?categoria=Sapatos" class="{% if categoria_selecionada == 'Sapatos' %}ativo{% endif %}">Sapatos</a>
+        <a href="?categoria=Bonés" class="{% if categoria_selecionada == 'Bonés' %}ativo{% endif %}">Bonés</a>
       </div>
 
       <div class="grid-produtos" id="ofertas">
         {% for produto in produtos %}
-        <a href="{% url 'produto' produto.pk %}" class="card-produto {% if produto.preco_antigo %}em-oferta{% endif %}">
-          <div class="card-imagem">
-            {% if produto.preco_antigo %}<span class="tag-oferta">-{{ produto.desconto_percentual }}%</span>{% endif %}
-            {% if produto.imagem %}
-              <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
-            {% else %}
-              <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ produto.nome }}">
-            {% endif %}
-          </div>
-          <p class="categoria">{{ produto.categoria }}</p>
-          <h3>{{ produto.nome }}</h3>
-          <div class="precos">
-            {% if produto.preco_antigo %}<span class="preco-antigo">R$ {{ produto.preco_antigo }}</span>{% endif %}
-            <span class="preco-atual">R$ {{ produto.preco }}</span>
-          </div>
-        </a>
+        <div class="card-wrap">
+
+          {% include 'app/coracao.html' with produto=produto %}
+
+          <a href="{% url 'produto' produto.pk %}" class="card-produto {% if produto.preco_antigo %}em-oferta{% endif %}">
+            <div class="card-imagem">
+              {% if produto.preco_antigo %}<span class="tag-oferta">-{{ produto.desconto_percentual }}%</span>{% endif %}
+              {% if produto.imagens.all %}
+                <div class="fotos-auto">
+                  {% if produto.imagem %}<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">{% endif %}
+                  {% for f in produto.imagens.all %}<img src="{{ f.imagem.url }}" alt="{{ produto.nome }}" loading="lazy">{% endfor %}
+                </div>
+              {% elif produto.imagem %}
+                <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+              {% else %}
+                <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ produto.nome }}">
+              {% endif %}
+            </div>
+            {% if produto.esgotado %}<p class="indisponivel">Produto indisponível</p>{% endif %}
+            <p class="categoria">{{ produto.categoria }}</p>
+            <h3>{{ produto.nome }}</h3>
+            <div class="precos">
+              {% if produto.preco_antigo %}<span class="preco-antigo">R$ {{ produto.preco_antigo }}</span>{% endif %}
+              <span class="preco-atual">R$ {{ produto.preco }}</span>
+            </div>
+          </a>
+
+        </div>
         {% empty %}
         <p>Nenhum produto encontrado.</p>
         {% endfor %}
       </div>
     </section>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  /* Troca a foto a cada 3 segundos nos produtos que têm mais de uma */
+  (function () {
+    var reduzir = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll('.fotos-auto').forEach(function (caixa, n) {
+      var fotos = caixa.querySelectorAll('img');
+      if (fotos.length < 2) return;
+
+      var atual = 0;
+      caixa.classList.add('rodando');
+      fotos[0].classList.add('ativa');
+      if (reduzir) return;
+
+      setTimeout(function () {
+        setInterval(function () {
+          fotos[atual].classList.remove('ativa');
+          atual = (atual + 1) % fotos.length;
+          fotos[atual].classList.add('ativa');
+        }, 3000);
+      }, n * 500);
+    });
+  })();
+</script>
 {% endblock %}
