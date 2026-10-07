@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'app/css/style.css' %}?v=3">
+  <link rel="stylesheet" href="{% static 'app/css/style.css' %}?v=9">
 
   <style>
     .botao-pessoa {
@@ -59,6 +59,120 @@
       background: var(--dourado);
       color: var(--preto);
     }
+
+    /* ===== CURTIDOS: coração nos cards ===== */
+    .card-wrap {
+      position: relative;
+    }
+
+    .card-wrap .form-curtir {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 5;
+      display: block;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      background: none;
+      border: 0;
+    }
+
+    /* Botão: vidro escuro com borda clara, combinando com o tema do site */
+    .card-wrap .btn-curtir {
+      -webkit-appearance: none;
+      appearance: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      margin: 0;
+      padding: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(245, 243, 238, 0.4);
+      background: rgba(12, 12, 24, 0.55);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      color: var(--creme, #f5f3ee);
+      line-height: 0;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.25s, border-color 0.25s, color 0.25s;
+    }
+
+    .card-wrap .btn-curtir svg {
+      display: block;
+      fill: transparent;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      transition: fill 0.25s;
+      pointer-events: none;
+    }
+
+    .card-wrap .btn-curtir:hover {
+      transform: scale(1.1);
+      border-color: var(--dourado, #c9a24b);
+      color: var(--dourado, #c9a24b);
+      background: rgba(12, 12, 24, 0.78);
+    }
+
+    .card-wrap .btn-curtir:active {
+      transform: scale(0.94);
+    }
+
+    /* Curtido: círculo dourado com coração cheio */
+    .card-wrap .btn-curtir.ativo {
+      background: var(--dourado, #c9a24b);
+      border-color: var(--dourado, #c9a24b);
+      color: var(--preto, #0b0b14);
+    }
+
+    .card-wrap .btn-curtir.ativo svg {
+      fill: currentColor;
+      animation: coracao-batida 0.45s ease-out;
+    }
+
+    .card-wrap .btn-curtir:focus-visible {
+      outline: 2px solid var(--dourado, #c9a24b);
+      outline-offset: 3px;
+    }
+
+    @keyframes coracao-batida {
+      0%   { transform: scale(0.6); }
+      55%  { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card-wrap .btn-curtir,
+      .card-wrap .btn-curtir svg { transition: none; animation: none; }
+    }
+
+    .indisponivel {
+      margin: 0 0 6px;
+      font-weight: 600;
+      color: #e5322d;
+    }
+
+    .btn-dourado[disabled],
+    .btn-dourado:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .curtidos-vazio {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .curtidos-vazio p {
+      margin-bottom: 20px;
+    }
   </style>
 
   {% block extra_head %}{% endblock %}
@@ -66,45 +180,23 @@
 
 <body>
 
+  <!-- ÍCONE DO CORAÇÃO (definido uma vez, usado em todo o site) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="icone-coracao" viewBox="0 0 24 24">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
+    </symbol>
+  </svg>
+
   <header>
 
-    <input
-      type="checkbox"
-      id="menu-toggle-input"
-      class="toggle-oculto"
-    >
+    <input type="checkbox" id="menu-toggle-input" class="toggle-oculto">
 
-    <a
-      href="{% url 'index' %}"
-      class="logo"
-      aria-label="Recreio Conceito — página inicial"
-    >
-      <svg
-        class="svg-logo"
-        viewBox="0 0 210 74"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
+    <a href="{% url 'index' %}" class="logo" aria-label="Recreio Conceito — página inicial">
+      <svg class="svg-logo" viewBox="0 0 210 74" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <text x="4" y="47" class="logo-letra">R</text>
-
-        <line
-          x1="96"
-          y1="9"
-          x2="96"
-          y2="51"
-          class="logo-linha"
-        />
-
+        <line x1="96" y1="9" x2="96" y2="51" class="logo-linha"/>
         <text x="108" y="47" class="logo-letra">C</text>
-
-        <text
-          x="99"
-          y="33"
-          class="logo-wordmark"
-          text-anchor="middle"
-        >
-          RECREIO CONCEITO
-        </text>
+        <text x="99" y="33" class="logo-wordmark" text-anchor="middle">RECREIO CONCEITO</text>
       </svg>
     </a>
 
@@ -114,54 +206,22 @@
     <nav>
 
       <ul>
-
         <li>
-          <a
-            href="{% url 'index' %}"
-            class="{% if request.resolver_match.url_name == 'index' %}ativo{% endif %}"
-          >
-            Home
-          </a>
+          <a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}ativo{% endif %}">Home</a>
         </li>
-
         <li>
-          <a
-            href="{% url 'produtos' %}"
-            class="{% if request.resolver_match.url_name == 'produtos' %}ativo{% endif %}"
-          >
-            Produtos
-          </a>
+          <a href="{% url 'produtos' %}" class="{% if request.resolver_match.url_name == 'produtos' %}ativo{% endif %}">Produtos</a>
         </li>
-
         <li>
-          <a href="{% url 'produtos' %}#ofertas">
-            Ofertas
-          </a>
+          <a href="{% url 'index' %}#ofertas">Ofertas</a>
         </li>
-
       </ul>
 
-
       {% if not user.is_authenticated %}
-
         <div class="nav-auth">
-
-          <a
-            href="{% url 'login' %}"
-            class="link-texto"
-          >
-            Entrar
-          </a>
-
-          <a
-            href="{% url 'cadastro' %}"
-            class="link-texto link-texto-destaque"
-          >
-            Cadastrar
-          </a>
-
+          <a href="{% url 'login' %}" class="link-texto">Entrar</a>
+          <a href="{% url 'cadastro' %}" class="link-texto link-texto-destaque">Cadastrar</a>
         </div>
-
       {% endif %}
 
     </nav>
@@ -177,57 +237,43 @@
 
         {% if user.is_authenticated %}
 
+          <!-- CURTIDOS (ao lado da sacola) -->
+          <a
+            href="{% url 'curtidos' %}"
+            class="link-sacola"
+            aria-label="Curtidos{% if curtidos_qtd %}, {{ curtidos_qtd }} {{ curtidos_qtd|pluralize:'peça,peças' }}{% endif %}"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <use href="#icone-coracao"/>
+            </svg>
+            {% if curtidos_qtd %}
+              <span class="sacola-contador">{{ curtidos_qtd }}</span>
+            {% endif %}
+          </a>
+
           <a
             href="{% url 'carrinho' %}"
             class="link-sacola"
             aria-label="Sacola{% if carrinho_qtd %}, {{ carrinho_qtd }} {{ carrinho_qtd|pluralize:'item,itens' }}{% endif %}"
           >
-
-            <svg
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
               <path d="M9 8V7a3 3 0 0 1 6 0v1"/>
             </svg>
-
             {% if carrinho_qtd %}
-              <span class="sacola-contador">
-                {{ carrinho_qtd }}
-              </span>
+              <span class="sacola-contador">{{ carrinho_qtd }}</span>
             {% endif %}
-
           </a>
 
+          {% if user.is_staff %}
+            <a href="{% url 'painel' %}" class="link-texto">Painel</a>
+          {% endif %}
 
-          <label
-            for="menu-toggle-input"
-            class="botao-pessoa"
-            aria-label="Abrir menu da conta"
-          >
-
-            <svg
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
+          <label for="menu-toggle-input" class="botao-pessoa" aria-label="Abrir menu da conta">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="8" r="4"/>
               <path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/>
             </svg>
-
           </label>
 
         {% endif %}
@@ -242,82 +288,40 @@
         {% if user.is_authenticated %}
 
           <a
-            href="#"
-            class="icone-favoritos"
-            aria-label="Favoritos"
+            href="{% url 'curtidos' %}"
+            class="icone-favoritos link-sacola"
+            aria-label="Curtidos{% if curtidos_qtd %}, {{ curtidos_qtd }} {{ curtidos_qtd|pluralize:'peça,peças' }}{% endif %}"
           >
-
-            <svg
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M12 20.5s-7-4.35-9.5-8.8C.8 8.2 2.3 4.9 5.6 4.2c2-.4 3.9.5 5.1 2.1a5.4 5.4 0 0 1 1.3-1.6c1.5-1.3 3.6-1.8 5.4-1c2.6 1.1 3.6 4.2 2.1 7.1c-2.4 4.5-9.5 8.7-9.5 8.7Z"/>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <use href="#icone-coracao"/>
             </svg>
-
+            {% if curtidos_qtd %}
+              <span class="sacola-contador">{{ curtidos_qtd }}</span>
+            {% endif %}
           </a>
-
 
           <a
             href="{% url 'carrinho' %}"
             class="link-sacola"
             aria-label="Sacola{% if carrinho_qtd %}, {{ carrinho_qtd }} {{ carrinho_qtd|pluralize:'item,itens' }}{% endif %}"
           >
-
-            <svg
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
               <path d="M9 8V7a3 3 0 0 1 6 0v1"/>
             </svg>
-
             {% if carrinho_qtd %}
-              <span class="sacola-contador">
-                {{ carrinho_qtd }}
-              </span>
+              <span class="sacola-contador">{{ carrinho_qtd }}</span>
             {% endif %}
-
           </a>
-
 
         {% else %}
 
-          <a
-            href="{% url 'login' %}"
-            class="link-texto"
-          >
-            Entrar
-          </a>
-
-          <a
-            href="{% url 'cadastro' %}"
-            class="link-texto link-texto-destaque"
-          >
-            Cadastrar
-          </a>
+          <a href="{% url 'login' %}" class="link-texto">Entrar</a>
+          <a href="{% url 'cadastro' %}" class="link-texto link-texto-destaque">Cadastrar</a>
 
         {% endif %}
 
-
-        <label
-          for="menu-toggle-input"
-          class="menu-toggle"
-          aria-label="Abrir menu"
-        >
+        <label for="menu-toggle-input" class="menu-toggle" aria-label="Abrir menu">
           <span></span>
           <span></span>
           <span></span>
@@ -330,11 +334,7 @@
 
     <!-- OVERLAY -->
 
-    <label
-      for="menu-toggle-input"
-      class="menu-overlay"
-      aria-hidden="true"
-    ></label>
+    <label for="menu-toggle-input" class="menu-overlay" aria-hidden="true"></label>
 
 
     <!-- MENU MOBILE -->
@@ -342,97 +342,41 @@
     <div class="menu-mobile">
 
       <div class="menu-mobile-topo">
-
-        <span class="menu-mobile-titulo">
-          Menu
-        </span>
-
-        <label
-          for="menu-toggle-input"
-          class="menu-mobile-fechar"
-          aria-label="Fechar menu"
-        >
-          &times;
-        </label>
-
+        <span class="menu-mobile-titulo">Menu</span>
+        <label for="menu-toggle-input" class="menu-mobile-fechar" aria-label="Fechar menu">&times;</label>
       </div>
 
-
       <nav class="menu-mobile-nav">
-
         <ul>
-
-          <li>
-            <a href="{% url 'index' %}">
-              Home
-            </a>
-          </li>
-
-          <li>
-            <a href="{% url 'produtos' %}">
-              Produtos
-            </a>
-          </li>
-
-          <li>
-            <a href="{% url 'produtos' %}#ofertas">
-              Ofertas
-            </a>
-          </li>
-
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'produtos' %}">Produtos</a></li>
+          <li><a href="{% url 'index' %}#ofertas">Ofertas</a></li>
         </ul>
-
       </nav>
-
 
       <div class="menu-mobile-conta">
 
         {% if user.is_authenticated %}
 
-          <a href="#">
-            Favoritos
-          </a>
+          <a href="{% url 'curtidos' %}">Curtidos{% if curtidos_qtd %} ({{ curtidos_qtd }}){% endif %}</a>
 
-          <a href="{% url 'carrinho' %}">
-            Minha sacola
-          </a>
+          <a href="{% url 'carrinho' %}">Minha sacola</a>
 
-          <a href="#">
-            Minha conta
-          </a>
+          <a href="#">Minha conta</a>
 
+          {% if user.is_staff %}
+            <a href="{% url 'painel' %}">Painel admin</a>
+          {% endif %}
 
-          <form
-            method="post"
-            action="{% url 'logout' %}"
-          >
+          <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
-
-            <button
-              type="submit"
-              class="btn-sair"
-            >
-              Sair
-            </button>
-
+            <button type="submit" class="btn-sair">Sair</button>
           </form>
-
 
         {% else %}
 
-          <a
-            href="{% url 'login' %}"
-            class="btn-contorno-claro"
-          >
-            Entrar
-          </a>
-
-          <a
-            href="{% url 'cadastro' %}"
-            class="btn-dourado"
-          >
-            Criar conta
-          </a>
+          <a href="{% url 'login' %}" class="btn-contorno-claro">Entrar</a>
+          <a href="{% url 'cadastro' %}" class="btn-dourado">Criar conta</a>
 
         {% endif %}
 
@@ -464,67 +408,34 @@
     <div class="footer-grid">
 
       <div>
-
-        <h4>
-          Recreio Conceito
-        </h4>
-
+        <h4>Recreio Conceito</h4>
         <p>
           Concept store de moda autoral.
           Peças pensadas pra atravessar estações,
           não tendências.
         </p>
-
       </div>
 
-
       <div>
-
-        <h4>
-          Navegue
-        </h4>
-
-        <a href="{% url 'index' %}">
-          Home
-        </a>
-
-        <a href="{% url 'produtos' %}">
-          Produtos
-        </a>
-
-        <a href="{% url 'carrinho' %}">
-          Sacola
-        </a>
-
+        <h4>Navegue</h4>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'produtos' %}">Produtos</a>
+        <a href="{% url 'carrinho' %}">Sacola</a>
       </div>
 
-
       <div>
-
-        <h4>
-          Atendimento
-        </h4>
-
-        <a href="#">
-          contato@recreioconceito.com
-        </a>
-
-        <a href="#">
-          Trocas e devoluções
-        </a>
-
+        <h4>Atendimento</h4>
+        <a href="#">contato@recreioconceito.com</a>
+        <a href="#">Trocas e devoluções</a>
       </div>
 
     </div>
 
-
     <div class="footer-base">
-
       <p>
         &copy; 2026 Recreio Conceito.
         Todos os direitos reservados.
       </p>
-
     </div>
 
   </footer>
@@ -536,7 +447,6 @@
     (function () {
 
       if (window.__toggleSenhaIniciado) return;
-
       window.__toggleSenhaIniciado = true;
 
       var NS = 'http://www.w3.org/2000/svg';
@@ -549,187 +459,56 @@
         '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 19C5 19 1 12 1 12a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/>' +
         '<line x1="1" y1="1" x2="23" y2="23"/>';
 
-
       function criarIcone(conteudo) {
-
-        var svg = document.createElementNS(
-          NS,
-          'svg'
-        );
-
-        svg.setAttribute(
-          'viewBox',
-          '0 0 24 24'
-        );
-
-        svg.setAttribute(
-          'width',
-          '20'
-        );
-
-        svg.setAttribute(
-          'height',
-          '20'
-        );
-
-        svg.setAttribute(
-          'fill',
-          'none'
-        );
-
-        svg.setAttribute(
-          'stroke',
-          'currentColor'
-        );
-
-        svg.setAttribute(
-          'stroke-width',
-          '1.8'
-        );
-
-        svg.setAttribute(
-          'stroke-linecap',
-          'round'
-        );
-
-        svg.setAttribute(
-          'stroke-linejoin',
-          'round'
-        );
-
-        svg.setAttribute(
-          'aria-hidden',
-          'true'
-        );
-
+        var svg = document.createElementNS(NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('width', '20');
+        svg.setAttribute('height', '20');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '1.8');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        svg.setAttribute('aria-hidden', 'true');
         svg.style.pointerEvents = 'none';
-
         svg.innerHTML = conteudo;
-
         return svg;
       }
 
-
-      function atualizar(
-        botao,
-        input,
-        visivel
-      ) {
-
-        input.type =
-          visivel
-            ? 'text'
-            : 'password';
-
-        botao._olhoAberto.style.display =
-          visivel
-            ? ''
-            : 'none';
-
-        botao._olhoFechado.style.display =
-          visivel
-            ? 'none'
-            : '';
-
-        botao.setAttribute(
-          'aria-label',
-          visivel
-            ? 'Ocultar senha'
-            : 'Mostrar senha'
-        );
-
-        botao.setAttribute(
-          'aria-pressed',
-          visivel
-            ? 'true'
-            : 'false'
-        );
+      function atualizar(botao, input, visivel) {
+        input.type = visivel ? 'text' : 'password';
+        botao._olhoAberto.style.display = visivel ? '' : 'none';
+        botao._olhoFechado.style.display = visivel ? 'none' : '';
+        botao.setAttribute('aria-label', visivel ? 'Ocultar senha' : 'Mostrar senha');
+        botao.setAttribute('aria-pressed', visivel ? 'true' : 'false');
       }
 
+      document.querySelectorAll('.campo-toggle-senha').forEach(function (botao) {
+        var wrap = botao.closest('.campo-input-wrap');
+        var input = wrap && wrap.querySelector('input');
+        if (!input) return;
 
-      document
-        .querySelectorAll('.campo-toggle-senha')
-        .forEach(function (botao) {
+        botao.setAttribute('type', 'button');
+        botao.innerHTML = '';
 
-          var wrap =
-            botao.closest('.campo-input-wrap');
+        botao._olhoAberto = criarIcone(ABERTO);
+        botao._olhoFechado = criarIcone(FECHADO);
+        botao.appendChild(botao._olhoAberto);
+        botao.appendChild(botao._olhoFechado);
+        botao._input = input;
 
-          var input =
-            wrap &&
-            wrap.querySelector('input');
+        atualizar(botao, input, false);
+      });
 
-          if (!input) return;
+      document.addEventListener('click', function (e) {
+        var botao = e.target.closest && e.target.closest('.campo-toggle-senha');
+        if (!botao || !botao._input) return;
 
+        e.preventDefault();
+        e.stopImmediatePropagation();
 
-          botao.setAttribute(
-            'type',
-            'button'
-          );
-
-          botao.innerHTML = '';
-
-
-          botao._olhoAberto =
-            criarIcone(ABERTO);
-
-          botao._olhoFechado =
-            criarIcone(FECHADO);
-
-
-          botao.appendChild(
-            botao._olhoAberto
-          );
-
-          botao.appendChild(
-            botao._olhoFechado
-          );
-
-
-          botao._input =
-            input;
-
-
-          atualizar(
-            botao,
-            input,
-            false
-          );
-
-        });
-
-
-      document.addEventListener(
-        'click',
-        function (e) {
-
-          var botao =
-            e.target.closest &&
-            e.target.closest(
-              '.campo-toggle-senha'
-            );
-
-          if (
-            !botao ||
-            !botao._input
-          ) {
-            return;
-          }
-
-
-          e.preventDefault();
-
-          e.stopImmediatePropagation();
-
-
-          atualizar(
-            botao,
-            botao._input,
-            botao._input.type === 'password'
-          );
-
-        },
-        true
-      );
+        atualizar(botao, botao._input, botao._input.type === 'password');
+      }, true);
 
     })();
   </script>

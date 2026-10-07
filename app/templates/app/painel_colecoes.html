@@ -1,0 +1,66 @@
+{% extends 'app/painel_base.html' %}
+
+{% block painel %}
+  <h1>Coleções</h1>
+  <p class="sub">Cada coleção criada aparece no site como um cartão com o botão “Ver coleção”.</p>
+
+  <h2>Nova coleção</h2>
+  <form method="post" enctype="multipart/form-data" class="form" style="margin-bottom:3.5rem">
+    {% csrf_token %}
+
+    <div class="linha">
+      <label for="id_nome">Nome</label>
+      <input class="campo" type="text" id="id_nome" name="nome" maxlength="120"
+             placeholder="Ex.: Camisas" value="{{ form.nome.value|default_if_none:'' }}" required>
+      {% for e in form.nome.errors %}<small class="msg-erro">{{ e }}</small>{% endfor %}
+    </div>
+
+    <div class="linha">
+      <label for="id_descricao">Descrição <small style="display:inline">(opcional)</small></label>
+      <input class="campo" type="text" id="id_descricao" name="descricao" maxlength="150"
+             placeholder="Uma frase curta" value="{{ form.descricao.value|default_if_none:'' }}">
+      {% for e in form.descricao.errors %}<small class="msg-erro">{{ e }}</small>{% endfor %}
+    </div>
+
+    <div class="linha">
+      <label for="id_imagem">Imagem de fundo <small style="display:inline">(opcional)</small></label>
+      <input class="campo" type="file" id="id_imagem" name="imagem" accept="image/*">
+      {% for e in form.imagem.errors %}<small class="msg-erro">{{ e }}</small>{% endfor %}
+    </div>
+
+    <div class="linha">
+      <label for="id_ordem">Ordem de exibição</label>
+      <input class="campo" type="number" id="id_ordem" name="ordem" min="0"
+             value="{{ form.ordem.value|default_if_none:0 }}">
+      <small>Números menores aparecem primeiro.</small>
+    </div>
+
+    <div class="botoes">
+      <button class="btn principal" type="submit">Criar coleção</button>
+    </div>
+  </form>
+
+  <h2>Coleções criadas</h2>
+  <div class="colecoes-grid">
+    {% for c in colecoes %}
+    <div class="colecao-wrap">
+      <a class="colecao-card" href="{% url 'colecao_detalhe' c.pk %}"
+         {% if c.imagem %}style="--img:url('{{ c.imagem.url }}')"{% endif %}>
+        <span class="colecao-count">{{ c.total }} peça{{ c.total|pluralize }}</span>
+        <div class="colecao-info">
+          <h3>{{ c.nome }}</h3>
+          {% if c.descricao %}<p>{{ c.descricao }}</p>{% endif %}
+          <span class="colecao-link">Ver coleção <i aria-hidden="true">→</i></span>
+        </div>
+      </a>
+      <form method="post" action="{% url 'painel_colecao_excluir' c.pk %}"
+            onsubmit="return confirm('Excluir a coleção {{ c.nome|escapejs }}? Os produtos não serão apagados.')">
+        {% csrf_token %}
+        <button type="submit" class="link perigo" style="margin-left:0">Excluir</button>
+      </form>
+    </div>
+    {% empty %}
+    <p class="vazio">Nenhuma coleção ainda. Crie a primeira acima.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

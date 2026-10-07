@@ -3,6 +3,32 @@
 
 {% block titulo %}Recreio Conceito — Moda com Intenção{% endblock %}
 
+{% block extra_head %}
+<style>
+  /* Fotos que alternam sozinhas (página inicial) */
+  .fotos-auto { position: relative; display: block; }
+  .fotos-auto img { display: block; width: 100%; transition: opacity .9s ease; }
+  .fotos-auto img:not(:first-child) {
+    position: absolute; inset: 0; height: 100%; object-fit: cover; opacity: 0;
+  }
+  .fotos-auto.rodando img { opacity: 0; }
+  .fotos-auto.rodando img.ativa { opacity: 1; }
+
+  /* Versão que preenche a miniatura do "Novos lançamentos" */
+  .hero-card-thumb { position: relative; overflow: hidden; }
+  .fotos-auto.cobrir { position: absolute; inset: 0; }
+  .fotos-auto.cobrir img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0;
+  }
+  .fotos-auto.cobrir.rodando img.ativa { opacity: 1; }
+
+  /* Coração menor para os cards compactos do hero */
+  .card-wrap.mini .form-curtir { top: 8px; right: 8px; }
+  .card-wrap.mini .btn-curtir { width: 30px; height: 30px; }
+  .card-wrap.mini .btn-curtir svg { width: 16px; height: 16px; }
+</style>
+{% endblock %}
+
 {% block content %}
 
     <section class="hero">
@@ -20,18 +46,28 @@
         </div>
 
         {% for produto in produtos_destaque %}
-        <a href="{% url 'produto' produto.pk %}" class="hero-card">
-          <div class="hero-card-thumb thumb-{{ forloop.counter }}"
-               {% if produto.imagem %}style="background-image:url('{{ produto.imagem.url }}');"{% endif %}>
-            <span class="hero-card-tag">Novo</span>
-          </div>
-          <div class="hero-card-info">
-            <span class="hero-card-cat">{{ produto.categoria }}</span>
-            <h3>{{ produto.nome }}</h3>
-            <div class="hero-card-preco"><strong>R$ {{ produto.preco }}</strong></div>
-          </div>
-          <span class="hero-card-seta" aria-hidden="true">→</span>
-        </a>
+        <div class="card-wrap mini">
+          {% include 'app/coracao.html' with produto=produto %}
+
+          <a href="{% url 'produto' produto.pk %}" class="hero-card">
+            <div class="hero-card-thumb thumb-{{ forloop.counter }}"
+                 {% if produto.imagem %}style="background-image:url('{{ produto.imagem.url }}');"{% endif %}>
+              {% if produto.imagens.all %}
+              <div class="fotos-auto cobrir">
+                {% if produto.imagem %}<img src="{{ produto.imagem.url }}" alt="">{% endif %}
+                {% for f in produto.imagens.all %}<img src="{{ f.imagem.url }}" alt="" loading="lazy">{% endfor %}
+              </div>
+              {% endif %}
+              <span class="hero-card-tag">Novo</span>
+            </div>
+            <div class="hero-card-info">
+              <span class="hero-card-cat">{{ produto.categoria }}</span>
+              <h3>{{ produto.nome }}</h3>
+              <div class="hero-card-preco"><strong>R$ {{ produto.preco }}</strong></div>
+            </div>
+            <span class="hero-card-seta" aria-hidden="true">→</span>
+          </a>
+        </div>
         {% empty %}
         <p>Nenhum produto cadastrado ainda.</p>
         {% endfor %}
@@ -39,36 +75,32 @@
       </div>
     </section>
 
-    <!-- CARROSSEL — mantém igual, não depende de produto -->
-        <section class="secao-carrossel">
+    <!-- COLEÇÕES (cartões) -->
+    {% if colecoes %}
+    <section class="secao-colecoes" id="colecoes">
       <div class="titulo-secao">
         <h2>Nossas Coleções</h2>
-        <p>Arraste ou clique nos pontos abaixo</p>
+        <p>Escolha uma coleção e explore as peças</p>
       </div>
-
-      <div class="carrossel" id="carrossel">
-        {% for colecao in colecoes %}
-        <div class="slide" id="slide{{ forloop.counter }}">
-          {% if colecao.imagem %}
-            <img src="{{ colecao.imagem.url }}" alt="{{ colecao.nome }}">
-          {% else %}
-            <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ colecao.nome }}">
-          {% endif %}
-          <div class="slide-legenda">
-            <span>Coleção</span>
-            <h3>{{ colecao.nome }}</h3>
+      <div class="colecoes-grid">
+        {% for c in colecoes %}
+        <a class="colecao-card" href="{% url 'colecao_detalhe' c.pk %}"
+           {% if c.imagem %}style="--img:url('{{ c.imagem.url }}')"{% endif %}>
+          <span class="colecao-count">{{ c.total }} peça{{ c.total|pluralize }}</span>
+          <div class="colecao-info">
+            <h3>{{ c.nome }}</h3>
+            {% if c.descricao %}<p>{{ c.descricao }}</p>{% endif %}
+            <span class="colecao-link">Ver coleção <i aria-hidden="true">→</i></span>
           </div>
-        </div>
-        {% endfor %}
-      </div>
-
-      <div class="pontos-carrossel">
-        {% for colecao in colecoes %}
-        <a href="#slide{{ forloop.counter }}" aria-label="Ir para slide {{ forloop.counter }}"></a>
+        </a>
+        {% empty %}
+        <p class="vazio">Nenhuma coleção ainda.</p>
         {% endfor %}
       </div>
     </section>
-        <section class="secao-ofertas" id="ofertas">
+    {% endif %}
+
+    <section class="secao-ofertas" id="ofertas">
       <div class="titulo-secao">
         <h2>Em Oferta</h2>
         <p>Peças selecionadas com condição especial por tempo limitado</p>
@@ -76,26 +108,64 @@
 
       <div class="grid-produtos">
         {% for produto in ofertas %}
-        <a href="{% url 'produto' produto.pk %}" class="card-produto em-oferta">
-          <div class="card-imagem">
-            <span class="tag-oferta">-{{ produto.desconto_percentual }}%</span>
-            {% if produto.imagem %}
-              <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
-            {% else %}
-              <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ produto.nome }}">
-            {% endif %}
-          </div>
-          <p class="categoria">{{ produto.categoria }}</p>
-          <h3>{{ produto.nome }}</h3>
-          <div class="precos">
-            <span class="preco-antigo">R$ {{ produto.preco_antigo }}</span>
-            <span class="preco-atual">R$ {{ produto.preco }}</span>
-          </div>
-        </a>
+        <div class="card-wrap">
+          {% include 'app/coracao.html' with produto=produto %}
+
+          <a href="{% url 'produto' produto.pk %}" class="card-produto em-oferta">
+            <div class="card-imagem">
+              <span class="tag-oferta">-{{ produto.desconto_percentual }}%</span>
+              {% if produto.imagens.all %}
+                <div class="fotos-auto">
+                  {% if produto.imagem %}<img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">{% endif %}
+                  {% for f in produto.imagens.all %}<img src="{{ f.imagem.url }}" alt="{{ produto.nome }}" loading="lazy">{% endfor %}
+                </div>
+              {% elif produto.imagem %}
+                <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+              {% else %}
+                <img src="{% static 'app/img/placeholder.jpg' %}" alt="{{ produto.nome }}">
+              {% endif %}
+            </div>
+            {% if produto.esgotado %}<p class="indisponivel">Produto indisponível</p>{% endif %}
+            <p class="categoria">{{ produto.categoria }}</p>
+            <h3>{{ produto.nome }}</h3>
+            <div class="precos">
+              <span class="preco-antigo">R$ {{ produto.preco_antigo }}</span>
+              <span class="preco-atual">R$ {{ produto.preco }}</span>
+            </div>
+          </a>
+        </div>
         {% empty %}
         <p>Nenhuma oferta no momento.</p>
         {% endfor %}
       </div>
     </section>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  /* Troca a foto a cada 3 segundos nos produtos que têm mais de uma */
+  (function () {
+    var reduzir = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll('.fotos-auto').forEach(function (caixa, n) {
+      var fotos = caixa.querySelectorAll('img');
+      if (fotos.length < 2) return;
+
+      var atual = 0;
+      caixa.classList.add('rodando');
+      fotos[0].classList.add('ativa');
+      if (reduzir) return;
+
+      // pequeno atraso entre os cards, para não trocarem todos juntos
+      setTimeout(function () {
+        setInterval(function () {
+          fotos[atual].classList.remove('ativa');
+          atual = (atual + 1) % fotos.length;
+          fotos[atual].classList.add('ativa');
+        }, 3000);
+      }, n * 500);
+    });
+  })();
+</script>
 {% endblock %}

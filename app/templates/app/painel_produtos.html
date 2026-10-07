@@ -1,0 +1,38 @@
+{% extends 'app/painel_base.html' %}
+
+{% block painel %}
+  <div class="topo">
+    <h1>Produtos</h1>
+    <a class="btn principal" href="{% url 'painel_produto_novo' %}">Cadastrar produto</a>
+  </div>
+
+  {% if produtos %}
+  <table class="tabela">
+    <thead>
+      <tr>
+        <th scope="col">Produto</th>
+        <th scope="col" class="num">Preço</th>
+        <th scope="col" class="num">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in produtos %}
+      <tr>
+        <td>{{ p }}</td>
+        <td class="num">R$ {{ p.preco|floatformat:2 }}</td>
+        <td class="num">
+          <a href="{% url 'painel_produto_editar' p.pk %}">Editar</a>
+          <form method="post" action="{% url 'painel_produto_excluir' p.pk %}"
+                onsubmit="return confirm('Excluir este produto? Essa ação não pode ser desfeita.');">
+            {% csrf_token %}
+            <button type="submit" class="link perigo">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="vazio">Nenhum produto cadastrado. Comece pela primeira peça.</p>
+  {% endif %}
+{% endblock %}
