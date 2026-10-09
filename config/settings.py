@@ -157,6 +157,8 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
+
+
 # Entrou com Google/Apple e o e-mail já existe no site? Liga à conta existente
 # (só é seguro porque Google e Apple entregam o e-mail já verificado).
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
@@ -175,11 +177,10 @@ SOCIALACCOUNT_PROVIDERS = {
     },
     'apple': {
         'APPS': [{
-            'client_id': os.environ.get('APPLE_SERVICES_ID', ''),  # Services ID
-            'secret': os.environ.get('APPLE_KEY_ID', ''),          # Key ID da chave .p8
-            'key': os.environ.get('APPLE_TEAM_ID', ''),            # Team ID
+            'client_id': os.environ.get('APPLE_SERVICES_ID', ''),
+            'secret': os.environ.get('APPLE_KEY_ID', ''),
+            'key': os.environ.get('APPLE_TEAM_ID', ''),
             'settings': {
-                # Conteúdo do arquivo .p8 (-----BEGIN PRIVATE KEY----- ...)
                 'certificate_key': os.environ.get('APPLE_PRIVATE_KEY', '').replace('\\n', '\n'),
             },
         }],
