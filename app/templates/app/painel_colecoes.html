@@ -53,11 +53,16 @@
           <span class="colecao-link">Ver coleção <i aria-hidden="true">→</i></span>
         </div>
       </a>
-      <form method="post" action="{% url 'painel_colecao_excluir' c.pk %}"
-            onsubmit="return confirm('Excluir a coleção {{ c.nome|escapejs }}? Os produtos não serão apagados.')">
-        {% csrf_token %}
-        <button type="submit" class="link perigo" style="margin-left:0">Excluir</button>
-      </form>
+
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <a class="link" href="{% url 'painel_colecao_editar' c.pk %}" style="margin-left:0">Editar</a>
+
+        <form method="post" action="{% url 'painel_colecao_excluir' c.pk %}"
+              onsubmit="return confirm('Excluir a coleção {{ c.nome|escapejs }}? Os produtos não serão apagados.')">
+          {% csrf_token %}
+          <button type="submit" class="link perigo" style="margin-left:0">Excluir</button>
+        </form>
+      </div>
     </div>
     {% empty %}
     <p class="vazio">Nenhuma coleção ainda. Crie a primeira acima.</p>

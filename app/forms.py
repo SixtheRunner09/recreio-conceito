@@ -155,3 +155,87 @@ class ColecaoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         _aplicar_classe_campo(self)
+
+        from django import forms
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+from django import forms
+from django.contrib.auth import get_user_model
+from django.db.models import Q
+
+User = get_user_model()
+
+
+class DadosPessoaisForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+        labels = {
+            'first_name': 'Nome',
+            'last_name': 'Sobrenome',
+        }
+        widgets = {
+            'first_name': forms.TextInput(attrs={'autocomplete': 'given-name'}),
+            'last_name': forms.TextInput(attrs={'autocomplete': 'family-name'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+
+
+class AlterarEmailForm(forms.Form):
+    email = forms.EmailField(
+        label='Novo e-mail',
+        widget=forms.EmailInput(attrs={'autocomplete': 'email'}),
+    )
+    senha_atual = forms.CharField(
+        label='Senha atual',
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),
+    )
+
+    def __init__(self, usuario, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.usuario = usuario
+        # Conta criada só com Google/Apple não tem senha para confirmar
+        if not usuario.has_usable_password():
+            del self.fields['senha_atual']
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip().lower()
+
+        if email == (self.usuario.email or '').lower():
+            raise forms.ValidationError('Esse já é o seu e-mail atual.')
+
+        em_uso = (
+            User.objects
+            .filter(Q(email__iexact=email) | Q(username__iexact=email))
+            .exclude(pk=self.usuario.pk)
+            .exists()
+        )
+        if em_uso:
+            raise forms.ValidationError('Este e-mail já está em uso.')
+
+        return email
+
+    def clean_senha_atual(self):
+        senha = self.cleaned_data['senha_atual']
+        if not self.usuario.check_password(senha):
+            raise forms.ValidationError('Senha incorreta.')
+        return senha
+
+    def salvar(self):
+        usuario = self.usuario
+
+        # Se o login é feito pelo e-mail (username == e-mail), os dois andam juntos
+        username_era_email = usuario.username.lower() == (usuario.email or '').lower()
+
+        usuario.email = self.cleaned_data['email']
+        if username_era_email:
+            usuario.username = usuario.email
+
+        usuario.save(update_fields=['email', 'username'])
+        return usuario

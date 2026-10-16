@@ -1,0 +1,138 @@
+/* =========================================================
+   SELETOR DE QUANTIDADE (página do produto + sacola)
+   Salvar em: app/static/app/css/quantidade.css
+   ========================================================= */
+
+/* ---------- Página do produto ---------- */
+
+.form-comprar {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+}
+
+.seletor-qtd {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.seletor-qtd label {
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(11, 11, 20, 0.7);
+}
+
+.seletor-qtd input,
+.form-qtd input {
+  width: 84px;
+  box-sizing: border-box;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 16px; /* 16px evita o zoom automático do iPhone */
+  text-align: center;
+  color: var(--preto, #0b0b14);
+  background: #fff;
+  border: 1px solid rgba(11, 11, 20, 0.25);
+  border-radius: 8px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.seletor-qtd input:focus,
+.form-qtd input:focus {
+  outline: none;
+  border-color: var(--dourado, #c9a24b);
+  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.25);
+}
+
+.qtd-aviso {
+  font-size: 12px;
+  color: #c0302b;
+}
+
+/* ---------- Sacola ---------- */
+
+.form-qtd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.form-qtd-rotulo {
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.form-qtd-botao {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 11px 16px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--dourado, #c9a24b);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.form-qtd-botao:hover {
+  background: var(--dourado, #c9a24b);
+  color: var(--preto, #0b0b14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seletor-qtd input,
+  .form-qtd input,
+  .form-qtd-botao { transition: none; }
+}
+
+/* ---------- Ajustes de layout ---------- */
+
+/* Formulário de compra ocupa o espaço e o botão acompanha o "Comprar agora" */
+.produto-acoes .form-comprar {
+  flex: 1 1 auto;
+}
+
+.form-comprar .btn-dourado {
+  flex: 1;
+  border: 0;
+  font-family: var(--fonte-corpo, 'Jost', sans-serif);
+  cursor: pointer;
+}
+
+/* Sacola no celular: foto + dados na primeira linha, quantidade + remover na segunda */
+@media (max-width: 860px) {
+  .secao-carrinho {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .item-carrinho {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .item-carrinho img {
+    width: 88px;
+    height: 112px;
+  }
+
+  .item-info {
+    flex: 1 1 calc(100% - 104px);
+  }
+
+  .item-quantidade {
+    flex: 1 1 auto;
+  }
+}

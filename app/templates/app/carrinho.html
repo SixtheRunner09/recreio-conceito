@@ -3,6 +3,10 @@
 
 {% block titulo %}Minha Sacola — Recreio Conceito{% endblock %}
 
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app/css/quantidade.css' %}?v=1">
+{% endblock %}
+
 {% block content %}
 
     <section class="secao-carrinho">
@@ -23,7 +27,21 @@
           </div>
 
           <div class="item-quantidade">
-            Qtd: {{ item.quantidade }}
+            <form action="{% url 'atualizar_carrinho' item.produto.id %}" method="post" class="form-qtd">
+              {% csrf_token %}
+              <label for="qtd-{{ item.produto.id }}" class="form-qtd-rotulo">Qtd</label>
+              <input
+                type="number"
+                id="qtd-{{ item.produto.id }}"
+                name="quantidade"
+                value="{{ item.quantidade }}"
+                min="0"
+                max="{{ item.produto.estoque }}"
+                inputmode="numeric"
+                aria-label="Quantidade de {{ item.produto.nome }}"
+              >
+              <button type="submit" class="form-qtd-botao">Atualizar</button>
+            </form>
           </div>
 
           <form action="{% url 'remover_do_carrinho' item.produto.id %}" method="post" style="display:inline;">

@@ -1,0 +1,50 @@
+{% extends 'app/painel_base.html' %}
+
+{% block painel %}
+  <div class="topo">
+    <h1>Editar coleção</h1>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="form" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="linha">
+      <label for="id_nome">Nome</label>
+      <input class="campo" type="text" id="id_nome" name="nome" maxlength="120"
+             placeholder="Ex.: Camisas" value="{{ form.nome.value|default_if_none:'' }}" required>
+      {% for e in form.nome.errors %}<small class="msg-erro">{{ e }}</small>{% endfor %}
+    </div>
+
+    <div class="linha">
+      <label for="id_descricao">Descrição <small style="display:inline">(opcional)</small></label>
+      <input class="campo" type="text" id="id_descricao" name="descricao" maxlength="150"
+             placeholder="Uma frase curta" value="{{ form.descricao.value|default_if_none:'' }}">
+      {% for e in form.descricao.errors %}<small class="msg-erro">{{ e }}</small>{% endfor %}
+    </div>
+
+    <div class="linha">
+      <label for="id_imagem">Imagem de fundo <small style="display:inline">(opcional)</small></label>
+      {% if colecao.imagem %}
+        <img src="{{ colecao.imagem.url }}" alt=""
+             style="width:96px; height:120px; object-fit:cover; display:block; border:1px solid var(--linha); margin-bottom:.5rem;">
+      {% endif %}
+      <input class="campo" type="file" id="id_imagem" name="imagem" accept="image/*">
+      <small>{% if colecao.imagem %}Escolha um arquivo só se quiser trocar a imagem atual.{% else %}Esta coleção ainda não tem imagem.{% endif %}</small>
+      {% for e in form.imagem.errors %}<small class="msg-erro">{{ e }}</small>{% endfor %}
+    </div>
+
+    <div class="linha">
+      <label for="id_ordem">Ordem de exibição</label>
+      <input class="campo" type="number" id="id_ordem" name="ordem" min="0"
+             value="{{ form.ordem.value|default_if_none:0 }}">
+      <small>Números menores aparecem primeiro.</small>
+      {% for e in form.ordem.errors %}<small class="msg-erro">{{ e }}</small>{% endfor %}
+    </div>
+
+    <div class="botoes">
+      <button type="submit" class="btn principal">Salvar alterações</button>
+      <a class="btn" href="{% url 'painel_colecoes' %}">Cancelar</a>
+    </div>
+  </form>
+{% endblock %}
