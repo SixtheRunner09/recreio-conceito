@@ -1,13 +1,26 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.contrib.auth import (
+    login as auth_login,
+    logout as auth_logout,
+    update_session_auth_hash,
+)
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
-from .forms import CadastroForm, ColecaoForm, LoginForm, ProdutoForm
+from .forms import (
+    AlterarEmailForm,
+    CadastroForm,
+    ColecaoForm,
+    DadosPessoaisForm,
+    LoginForm,
+    ProdutoForm,
+)
 from .models import Colecao, Produto, ProdutoImagem
 
 
@@ -99,6 +112,21 @@ def colecao_detalhe(request, pk):
 # CARRINHO
 # =========================
 
+def _ler_quantidade(request, padrao=1):
+    """Lê o campo 'quantidade' do POST; valor inválido vira o padrão."""
+    try:
+        return int(request.POST.get('quantidade', padrao))
+    except (TypeError, ValueError):
+        return padrao
+
+
+def _quantidade_no_carrinho(dados):
+    """Aceita os dois formatos da sessão: {'quantidade': n} ou n (antigo)."""
+    if isinstance(dados, dict):
+        return dados.get('quantidade', 0)
+    return dados or 0
+
+
 def adicionar_ao_carrinho(request, produto_id):
     produto = get_object_or_404(Produto, pk=produto_id)
 
@@ -109,26 +137,35 @@ def adicionar_ao_carrinho(request, produto_id):
         )
         return redirect('produto', pk=produto.pk)
 
+    # Quantidade escolhida na página do produto (pelo menos 1)
+    desejada = max(_ler_quantidade(request), 1)
+
     carrinho = request.session.get('carrinho', {})
     produto_id_str = str(produto_id)
+    quantidade_atual = _quantidade_no_carrinho(carrinho.get(produto_id_str))
 
-    dados = carrinho.get(produto_id_str)
-    if isinstance(dados, dict):
-        quantidade_atual = dados.get('quantidade', 0)
-    else:
-        quantidade_atual = dados or 0
+    # Nunca passa do estoque: soma o que já está na sacola com o pedido
+    disponivel = produto.estoque - quantidade_atual
 
-    # Não deixa passar do estoque disponível
-    if quantidade_atual + 1 > produto.estoque:
+    if disponivel <= 0:
         messages.warning(
             request,
-            f'Só temos {produto.estoque} '
-            f'unidade{"s" if produto.estoque != 1 else ""} '
+            f'Você já tem na sacola todas as unidades disponíveis '
             f'de “{produto.nome}”.'
         )
         return redirect('carrinho')
 
-    carrinho[produto_id_str] = {'quantidade': quantidade_atual + 1}
+    adicionar = min(desejada, disponivel)
+
+    if adicionar < desejada:
+        messages.warning(
+            request,
+            f'Só temos {produto.estoque} '
+            f'unidade{"s" if produto.estoque != 1 else ""} '
+            f'de “{produto.nome}”. Adicionamos {adicionar}.'
+        )
+
+    carrinho[produto_id_str] = {'quantidade': quantidade_atual + adicionar}
 
     request.session['carrinho'] = carrinho
     request.session.modified = True
@@ -195,6 +232,41 @@ def remover_do_carrinho(request, produto_id):
     return redirect('carrinho')
 
 
+@require_POST
+def atualizar_carrinho(request, produto_id):
+    """Define a quantidade exata de um item já presente na sacola."""
+    carrinho = request.session.get('carrinho', {})
+    chave = str(produto_id)
+
+    if chave not in carrinho:
+        return redirect('carrinho')
+
+    produto = get_object_or_404(Produto, pk=produto_id)
+    quantidade = _ler_quantidade(
+        request, padrao=_quantidade_no_carrinho(carrinho[chave])
+    )
+
+    if quantidade > produto.estoque:
+        quantidade = produto.estoque
+        messages.warning(
+            request,
+            f'Só temos {produto.estoque} '
+            f'unidade{"s" if produto.estoque != 1 else ""} '
+            f'de “{produto.nome}”.'
+        )
+
+    if quantidade <= 0:
+        # Zero (ou item sem estoque) tira da sacola
+        del carrinho[chave]
+    else:
+        carrinho[chave] = {'quantidade': quantidade}
+
+    request.session['carrinho'] = carrinho
+    request.session.modified = True
+
+    return redirect('carrinho')
+
+
 # =========================
 # CURTIDOS
 # =========================
@@ -207,14 +279,12 @@ def alternar_curtida(request, produto_id):
 
     if produto_id in curtidos:
         curtidos.remove(produto_id)
-        curtiu = False
         messages.info(
             request,
             f'“{produto.nome}” foi removido dos seus curtidos.'
         )
     else:
         curtidos.append(produto_id)
-        curtiu = True
         messages.success(
             request,
             f'“{produto.nome}” foi adicionado aos seus curtidos.'
@@ -223,28 +293,103 @@ def alternar_curtida(request, produto_id):
     request.session['curtidos'] = curtidos
     request.session.modified = True
 
-    # Curtiu -> leva para a página de curtidos.
-    # Descurtiu -> volta para a página de onde veio.
-    proximo = request.POST.get('next', '')
-    if (
-        not curtiu
-        and proximo
-        and url_has_allowed_host_and_scheme(
-            proximo, allowed_hosts={request.get_host()}
-        )
+    destino = request.POST.get('next') or request.META.get('HTTP_REFERER', '')
+    if destino and url_has_allowed_host_and_scheme(
+        destino, allowed_hosts={request.get_host()}
     ):
-        return redirect(proximo)
+        return redirect(destino)
 
-    return redirect('curtidos')
+    return redirect('index')
 
 
 def curtidos(request):
     ids = request.session.get('curtidos', [])
-    lista = Produto.objects.filter(pk__in=ids).prefetch_related('imagens')
+
+    por_id = Produto.objects.prefetch_related('imagens').in_bulk(ids)
+    lista = [por_id[i] for i in ids if i in por_id]
 
     return render(request, 'app/curtidos.html', {
         'produtos': lista,
     })
+
+
+# =========================
+# MINHA CONTA (CLIENTE)
+# =========================
+
+def _pagina_conta_form(request, form, *, titulo, descricao, botao):
+    """Uma única página de formulário, reaproveitada pelas telas da conta."""
+    return render(request, 'app/conta_form.html', {
+        'form': form,
+        'titulo': titulo,
+        'descricao': descricao,
+        'botao': botao,
+    })
+
+
+@login_required(login_url='login')
+def minha_conta(request):
+    return render(request, 'app/minha_conta.html', {
+        'nome': _primeiro_nome(request.user),
+    })
+
+
+@login_required(login_url='login')
+def conta_dados(request):
+    form = DadosPessoaisForm(request.POST or None, instance=request.user)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Seus dados foram atualizados.')
+        return redirect('minha_conta')
+
+    return _pagina_conta_form(
+        request, form,
+        titulo='Alterar dados pessoais',
+        descricao='Como você quer ser chamado(a) na loja.',
+        botao='Salvar alterações',
+    )
+
+
+@login_required(login_url='login')
+def conta_email(request):
+    form = AlterarEmailForm(request.user, request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        form.salvar()
+        messages.success(request, 'Seu e-mail foi atualizado.')
+        return redirect('minha_conta')
+
+    return _pagina_conta_form(
+        request, form,
+        titulo='Alterar meu e-mail',
+        descricao='Por segurança, confirme sua senha para trocar o e-mail.',
+        botao='Atualizar e-mail',
+    )
+
+
+@login_required(login_url='login')
+def conta_senha(request):
+    # Quem entrou só com Google/Apple ainda não tem senha: cria em vez de trocar.
+    form_class = (
+        PasswordChangeForm if request.user.has_usable_password()
+        else SetPasswordForm
+    )
+    form = form_class(request.user, request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        usuario = form.save()
+        # Mantém a pessoa logada depois da troca
+        update_session_auth_hash(request, usuario)
+        messages.success(request, 'Senha atualizada com sucesso.')
+        return redirect('minha_conta')
+
+    return _pagina_conta_form(
+        request, form,
+        titulo='Trocar minha senha',
+        descricao='Escolha uma senha forte que você não use em outros sites.',
+        botao='Salvar senha',
+    )
 
 
 # =========================
@@ -481,3 +626,23 @@ def painel_colecao_excluir(request, pk):
     get_object_or_404(Colecao, pk=pk).delete()
     messages.success(request, 'Coleção excluída.')
     return redirect('painel_colecoes')
+
+
+@staff_member_required(login_url='login')
+def painel_colecao_editar(request, pk):
+    colecao = get_object_or_404(Colecao, pk=pk)
+    form = ColecaoForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=colecao,
+    )
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Coleção atualizada.')
+        return redirect('painel_colecoes')
+
+    return render(request, 'app/painel_colecao_form.html', {
+        'form': form,
+        'colecao': colecao,
+    })

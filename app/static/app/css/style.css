@@ -26,13 +26,15 @@ html {
   overflow-x: hidden;
 }
 
+/* "clip" (e não "hidden") para o body não virar um contêiner de rolagem
+   e o header com position: sticky continuar grudado no topo */
 body {
   background-color: var(--creme);
   color: var(--preto);
   font-family: var(--fonte-corpo);
   font-size: 16px;
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img {
@@ -2926,4 +2928,41 @@ html{
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
+}
+
+
+/* ==================================================
+   PÁGINA DE PRODUTOS: todos os cards do mesmo tamanho
+   (substitui o bloco de grid/card-imagem que estava no final)
+   ================================================== */
+
+/* Um produto sozinho não estica mais pela linha inteira */
+.grid-produtos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 2rem;
+}
+
+/* Quadro fixo 4:5 para todas as fotos da página /produtos/ */
+.secao-produtos .card-imagem {
+  aspect-ratio: 4 / 5;
+}
+
+.secao-produtos .card-imagem > img,
+.secao-produtos .card-imagem .fotos-auto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Produtos com várias fotos (alternam sozinhas) preenchem o mesmo quadro */
+.secao-produtos .card-imagem .fotos-auto {
+  position: absolute;
+  inset: 0;
+}
+
+/* A etiqueta de oferta fica por cima das fotos */
+.secao-produtos .card-imagem .tag-oferta {
+  z-index: 2;
 }

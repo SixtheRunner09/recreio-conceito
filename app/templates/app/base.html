@@ -362,7 +362,7 @@
 
           <a href="{% url 'carrinho' %}">Minha sacola</a>
 
-          <a href="#">Minha conta</a>
+          <a href="{% url 'minha_conta' %}">Minha conta</a>
 
           {% if user.is_staff %}
             <a href="{% url 'painel' %}">Painel admin</a>

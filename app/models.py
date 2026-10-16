@@ -2,8 +2,9 @@ from django.db import models
 
 CATEGORIA_CHOICES = [
     ('Camisas', 'Camisas'),
+    ('Bermudas', 'Bermudas'),
     ('Calças', 'Calças'),
-    ('Sapatos', 'Sapatos'),
+    ('Calçados', 'Calçados'),
     ('Bonés', 'Bonés'),
 ]
 

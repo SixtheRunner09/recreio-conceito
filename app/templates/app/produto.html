@@ -4,6 +4,7 @@
 {% block titulo %}{{ produto.nome }} — Recreio Conceito{% endblock %}
 
 {% block extra_head %}
+<link rel="stylesheet" href="{% static 'app/css/quantidade.css' %}?v=1">
 <style>
   /* Galeria de fotos: arrastar para o lado */
   .gf { position: relative; }
@@ -95,11 +96,34 @@
         <p class="produto-descricao-breve">{{ produto.descricao }}</p>
 
         <div class="produto-acoes">
-          <form action="{% url 'adicionar_ao_carrinho' produto.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn-dourado">Adicionar ao carrinho</button>
-          </form>
-          <a href="#" class="btn-contorno">Comprar agora</a>
+          {% if produto.esgotado %}
+            <p class="indisponivel">Indisponível no momento</p>
+          {% else %}
+            <form action="{% url 'adicionar_ao_carrinho' produto.id %}" method="post" class="form-comprar">
+              {% csrf_token %}
+
+              <div class="seletor-qtd">
+                <label for="qtd">Quantidade</label>
+                <input
+                  type="number"
+                  id="qtd"
+                  name="quantidade"
+                  value="1"
+                  min="1"
+                  max="{{ produto.estoque }}"
+                  inputmode="numeric"
+                  required
+                >
+                {% if produto.estoque <= 5 %}
+                  <span class="qtd-aviso">Restam {{ produto.estoque }}</span>
+                {% endif %}
+              </div>
+
+              <button type="submit" class="btn-dourado">Adicionar ao carrinho</button>
+            </form>
+
+            <a href="#" class="btn-contorno">Comprar agora</a>
+          {% endif %}
         </div>
 
         <ul class="produto-beneficios">
@@ -163,10 +187,18 @@
 
     var botoes = [];
     function atual() { return Math.round(trilho.scrollLeft / trilho.clientWidth); }
+
+    // Vai para a foto i. Passou da última -> volta à primeira; antes da primeira -> vai à última.
     function ir(i) {
-      i = Math.max(0, Math.min(total - 1, i));
-      trilho.scrollTo({ left: i * trilho.clientWidth });
+      var deu_volta = (i >= total || i < 0);
+      i = (i + total) % total;
+      trilho.scrollTo({
+        left: i * trilho.clientWidth,
+        // ao dar a volta, pula direto (sem rolar por todas as fotos)
+        behavior: deu_volta ? 'instant' : 'smooth'
+      });
     }
+
     function marcar() {
       var a = atual();
       botoes.forEach(function (b, i) {

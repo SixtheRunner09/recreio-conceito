@@ -21,24 +21,19 @@ urlpatterns = [
 
     # Carrinho
     path('carrinho/', views.carrinho, name='carrinho'),
-    path(
-        'carrinho/adicionar/<int:produto_id>/',
-        views.adicionar_ao_carrinho,
-        name='adicionar_ao_carrinho'
-    ),
-    path(
-        'carrinho/remover/<int:produto_id>/',
-        views.remover_do_carrinho,
-        name='remover_do_carrinho'
-    ),
+    path('carrinho/adicionar/<int:produto_id>/',views.adicionar_ao_carrinho,name='adicionar_ao_carrinho'),
+    path('carrinho/remover/<int:produto_id>/',views.remover_do_carrinho,name='remover_do_carrinho'),
+    path('carrinho/atualizar/<int:produto_id>/', views.atualizar_carrinho, name='atualizar_carrinho'),
 
     # Curtidos
     path('curtidos/', views.curtidos, name='curtidos'),
-    path(
-        'curtidos/alternar/<int:produto_id>/',
-        views.alternar_curtida,
-        name='alternar_curtida'
-    ),
+    path('curtidos/alternar/<int:produto_id>/',views.alternar_curtida,name='alternar_curtida'),
+
+    # Minha conta
+    path('minha-conta/', views.minha_conta, name='minha_conta'),
+    path('minha-conta/dados/', views.conta_dados, name='conta_dados'),
+    path('minha-conta/email/', views.conta_email, name='conta_email'),
+    path('minha-conta/senha/', views.conta_senha, name='conta_senha'),
 
     # Login e cadastro
     path('login/', views.login_view, name='login'),
@@ -55,7 +50,8 @@ urlpatterns = [
     path('painel/produtos/<int:pk>/excluir/', views.painel_produto_excluir, name='painel_produto_excluir'),
     path('painel/colecoes/', views.painel_colecoes, name='painel_colecoes'),
     path('painel/colecoes/<int:pk>/excluir/', views.painel_colecao_excluir, name='painel_colecao_excluir'),
-
+    path('painel/colecoes/<int:pk>/editar/', views.painel_colecao_editar, name='painel_colecao_editar'),
+    path('minha-conta/', views.minha_conta, name='minha_conta'),
     # Google / django-allauth
     path('accounts/', include('allauth.urls')),
 ]

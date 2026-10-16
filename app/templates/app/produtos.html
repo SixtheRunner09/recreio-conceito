@@ -13,6 +13,45 @@
   }
   .fotos-auto.rodando img { opacity: 0; }
   .fotos-auto.rodando img.ativa { opacity: 1; }
+
+  /* ===== Cards do mesmo tamanho (fica aqui para não depender do cache do style.css) ===== */
+
+  /* Um produto sozinho não estica pela linha inteira (só no desktop/tablet;
+     no celular continua valendo o layout de 2 colunas do style.css) */
+  @media (min-width: 601px) {
+    .secao-produtos .grid-produtos {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+      gap: 2rem;
+      align-items: start;
+    }
+  }
+
+  /* Quadro fixo 4:5 para todas as fotos */
+  .secao-produtos .card-imagem {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+
+  .secao-produtos .card-imagem > img,
+  .secao-produtos .card-imagem .fotos-auto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Produtos com várias fotos preenchem o mesmo quadro */
+  .secao-produtos .card-imagem .fotos-auto {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Etiqueta de oferta por cima das fotos */
+  .secao-produtos .card-imagem .tag-oferta {
+    z-index: 2;
+  }
 </style>
 {% endblock %}
 
@@ -27,8 +66,9 @@
       <div class="filtros">
         <a href="{% url 'produtos' %}" class="{% if not categoria_selecionada %}ativo{% endif %}">Todos</a>
         <a href="?categoria=Camisas" class="{% if categoria_selecionada == 'Camisas' %}ativo{% endif %}">Camisas</a>
+        <a href="?categoria=Bermudas" class="{% if categoria_selecionada == 'Bermudas' %}ativo{% endif %}">Bermudas</a>
         <a href="?categoria=Calças" class="{% if categoria_selecionada == 'Calças' %}ativo{% endif %}">Calças</a>
-        <a href="?categoria=Sapatos" class="{% if categoria_selecionada == 'Sapatos' %}ativo{% endif %}">Sapatos</a>
+        <a href="?categoria=Calçados" class="{% if categoria_selecionada == 'Calçados' %}ativo{% endif %}">Calçados</a>
         <a href="?categoria=Bonés" class="{% if categoria_selecionada == 'Bonés' %}ativo{% endif %}">Bonés</a>
       </div>
 

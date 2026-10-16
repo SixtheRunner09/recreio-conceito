@@ -70,11 +70,13 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'app.context_processors.carrinho_contador',  # NOVO
+    'django.template.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+    'app.context_processors.carrinho_contador',
+    'app.context_processors.curtidos_contador',
             ],
+            
         },
     },
 ]
