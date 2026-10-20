@@ -189,6 +189,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
+
+STATIC_ROOT = '/home/SixTheDev/recreio-conceito/static'
 # Para testar a Apple em desenvolvimento (precisa de HTTPS, ex.: ngrok):
 # ALLOWED_HOSTS = ['seu-subdominio.ngrok-free.app']
 # CSRF_TRUSTED_ORIGINS = ['https://seu-subdominio.ngrok-free.app']
